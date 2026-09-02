@@ -3,385 +3,649 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudioGate — Autonomous Pipeline Governance</title>
+    <title>StudioGate — Autonomous Pipeline Governance & Cost Guardrails</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --brand-primary: #5832E2;
-            --brand-primary-hover: #4524C4;
-            --brand-secondary: #00D084;
-            --brand-dark: #0A0A14;
+            /* Strict 6-color palette */
+            --c1: #c0e6fd;
+            --c2: #80aad3;
+            --c3: #5b86b6;
+            --c4: #3f6593;
+            --c5: #1b3554;
+            --c6: #000f22;
             
-            --bg-page: #F8FAFC;
-            --bg-surface: #FFFFFF;
+            --bg-main: #f4f8fc;
+            --bg-card: #ffffff;
+            --bg-dark: #000f22;
             
-            --text-heading: #0F172A;
-            --text-body: #475569;
-            --text-muted: #94A3B8;
+            --border-light: rgba(128, 170, 211, 0.25);
+            --border-strong: rgba(63, 101, 147, 0.4);
             
-            --border-light: #E2E8F0;
-            
-            --status-ok: #10B981;
-            --status-warn: #F59E0B;
-            --status-err: #EF4444;
-            
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            
-            --radius-md: 8px;
-            --radius-lg: 16px;
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
             --radius-full: 9999px;
             
-            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --shadow-subtle: 0 4px 20px -2px rgba(0, 15, 34, 0.05);
+            --shadow-card: 0 12px 32px -4px rgba(0, 15, 34, 0.08);
+            --shadow-float: 0 24px 48px -8px rgba(0, 15, 34, 0.14);
+            
+            --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
+        html { scroll-behavior: smooth; }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-page);
-            color: var(--text-body);
+            background-color: var(--bg-main);
+            color: var(--c5);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
 
+        .font-serif { font-family: 'Playfair Display', serif; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-        h1, h2, h3, h4 { color: var(--text-heading); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
-
-        /* --- NAVIGATION --- */
-        nav {
+        h1, h2, h3, h4 { color: var(--c6); line-height: 1.15; font-weight: 700; }
+        
+        /* Floating Pill Navbar */
+        header {
             position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 48px;
-            z-index: 100;
+            top: 24px; left: 50%; transform: translateX(-50%);
+            width: min(1200px, 92%);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--c1);
+            padding: 12px 28px;
+            border-radius: var(--radius-full);
+            display: flex; align-items: center; justify-content: space-between;
+            z-index: 1000;
+            box-shadow: var(--shadow-subtle);
         }
 
-        .nav-brand { font-size: 20px; font-weight: 800; color: var(--brand-primary); display: flex; align-items: center; gap: 8px; }
-        .nav-brand-icon { width: 24px; height: 24px; background: var(--brand-primary); border-radius: 6px; }
+        .brand-logo {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; color: var(--c6); font-weight: 800; font-size: 17px;
+            letter-spacing: -0.03em;
+        }
         
-        .nav-links { display: flex; gap: 32px; font-weight: 600; font-size: 15px; }
-        .nav-links a { color: var(--text-heading); text-decoration: none; transition: color 0.2s ease; }
-        .nav-links a:hover { color: var(--brand-primary); }
+        .brand-icon-wrapper {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: var(--c6); color: var(--c1);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .nav-menu { display: flex; gap: 32px; font-size: 14px; font-weight: 600; list-style: none; }
+        .nav-menu a { color: var(--c4); text-decoration: none; transition: var(--transition); }
+        .nav-menu a:hover { color: var(--c6); }
 
         .btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            padding: 14px 28px;
-            font-weight: 700; font-size: 15px;
+            display: inline-flex; align-items: center; gap: 10px; justify-content: center;
+            padding: 12px 24px; font-size: 14px; font-weight: 600;
             border-radius: var(--radius-full);
-            text-decoration: none; border: none; cursor: pointer;
-            transition: all 0.3s var(--ease);
+            text-decoration: none; cursor: pointer; transition: var(--transition);
+            border: none; outline: none;
         }
-        .btn-primary { background: var(--brand-primary); color: #fff; }
-        .btn-primary:hover { background: var(--brand-primary-hover); transform: translateY(-2px); box-shadow: 0 8px 16px rgba(88, 50, 226, 0.25); }
-        .btn-secondary { background: transparent; color: var(--text-heading); border: 2px solid var(--border-light); }
-        .btn-secondary:hover { border-color: var(--text-heading); background: var(--bg-page); }
+        .btn-primary { background: var(--c6); color: #ffffff; }
+        .btn-primary:hover { background: var(--c5); box-shadow: var(--shadow-card); transform: translateY(-2px); }
+        
+        .btn-outline { background: var(--bg-card); color: var(--c6); border: 1px solid var(--c2); }
+        .btn-outline:hover { border-color: var(--c4); background: var(--c1); transform: translateY(-1px); }
 
-        /* --- HERO SECTION --- */
-        .hero {
-            padding: 160px 48px 80px;
-            max-width: 1400px;
+        /* Eyebrow Pill */
+        .eyebrow-pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; border-radius: var(--radius-full);
+            background: rgba(192, 230, 253, 0.4); border: 1px solid var(--c2);
+            color: var(--c5); font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            margin-bottom: 24px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 170px 24px 80px;
+            max-width: 1240px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 64px;
-            align-items: center;
-        }
-
-        .hero-content h1 { font-size: 64px; margin-bottom: 24px; }
-        .hero-content p { font-size: 20px; margin-bottom: 40px; color: var(--text-body); max-width: 520px; }
-        .hero-actions { display: flex; gap: 16px; }
-
-        .hero-visual {
-            position: relative;
-            width: 100%;
-            height: 600px;
-            background: var(--bg-surface);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-xl);
-            border: 1px solid var(--border-light);
-            overflow: hidden;
-        }
-        
-        #ink-container { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
-        
-        .hero-visual-overlay {
-            position: absolute; inset: 0; z-index: 2;
-            pointer-events: none;
-            display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle at center, transparent 30%, rgba(255,255,255,0.8) 100%);
-        }
-
-        /* --- LOGO STRIP --- */
-        .logo-strip {
-            border-top: 1px solid var(--border-light);
-            border-bottom: 1px solid var(--border-light);
-            background: var(--bg-surface);
-            padding: 40px 0;
             text-align: center;
         }
-        .logo-strip p { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 24px; }
-        .logos { display: flex; justify-content: center; gap: 64px; align-items: center; opacity: 0.6; }
-        .logos span { font-size: 24px; font-weight: 800; color: var(--text-heading); }
 
-        /* --- DASHBOARD DEMO SECTION --- */
-        .demo-section { padding: 120px 48px; background: var(--bg-page); }
-        .demo-header { text-align: center; max-width: 800px; margin: 0 auto 64px; }
-        .demo-header h2 { font-size: 48px; margin-bottom: 16px; }
+        .hero-title {
+            font-size: clamp(2.8rem, 5.5vw, 4.8rem);
+            letter-spacing: -0.03em;
+            color: var(--c6);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
 
-        .dashboard-container {
-            max-width: 1400px; margin: 0 auto;
-            background: var(--bg-surface);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-xl);
+        .hero-sub {
+            font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+            color: var(--c4);
+            max-width: 760px;
+            margin: 0 auto 40px;
+            font-weight: 400;
+        }
+
+        .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 64px; }
+
+        /* Stats Grid Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
             border: 1px solid var(--border-light);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-subtle);
+            transition: var(--transition);
         }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); border-color: var(--c2); }
+        .stat-num { font-size: 2rem; font-weight: 700; color: var(--c6); line-height: 1.1; margin-bottom: 4px; }
+        .stat-label { font-size: 13px; font-weight: 600; color: var(--c4); text-transform: uppercase; letter-spacing: 0.05em; }
 
-        .dash-header {
-            padding: 24px 32px; border-bottom: 1px solid var(--border-light);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .dash-header h3 { font-size: 20px; }
+        /* Informative Section: Architecture & Technical Guardrails */
+        .section-wrapper { padding: 90px 24px; max-width: 1240px; margin: 0 auto; }
         
-        .dash-grid {
-            display: grid; grid-template-columns: 350px 1fr;
+        .section-header { text-align: center; max-width: 780px; margin: 0 auto 60px; }
+        .section-header h2 { font-size: 2.75rem; letter-spacing: -0.02em; margin-bottom: 16px; }
+        .section-header p { font-size: 1.15rem; color: var(--c4); }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
         }
 
-        .dash-sidebar {
-            background: #F8FAFC; border-right: 1px solid var(--border-light);
-            padding: 32px; display: flex; flex-direction: column; gap: 24px;
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 36px;
+            box-shadow: var(--shadow-subtle);
+            transition: var(--transition);
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--c3); }
+
+        .feature-icon-box {
+            width: 48px; height: 48px; border-radius: var(--radius-md);
+            background: var(--c1); color: var(--c6);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 24px;
         }
 
-        .control-group h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 16px; }
+        .feature-card h3 { font-size: 1.35rem; margin-bottom: 12px; color: var(--c6); }
+        .feature-card p { color: var(--c4); font-size: 0.98rem; line-height: 1.6; margin-bottom: 20px; }
+
+        .feature-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; font-weight: 700; color: var(--c5);
+            background: rgba(192, 230, 253, 0.5); padding: 4px 12px; border-radius: var(--radius-full);
+            width: fit-content;
+        }
+
+        /* Architecture Flow Diagram Box */
+        .flow-container {
+            background: var(--c6);
+            color: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            margin-top: 60px;
+            box-shadow: var(--shadow-float);
+        }
+
+        .flow-title { color: #ffffff; font-size: 1.75rem; margin-bottom: 12px; }
+        .flow-subtitle { color: var(--c2); font-size: 1rem; margin-bottom: 40px; max-width: 650px; }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            position: relative;
+        }
+
+        .flow-step {
+            background: rgba(27, 53, 84, 0.6);
+            border: 1px solid var(--c4);
+            border-radius: var(--radius-md);
+            padding: 24px;
+        }
+
+        .flow-step-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; font-weight: 700; color: var(--c1);
+            text-transform: uppercase; margin-bottom: 12px;
+        }
+        .flow-step h4 { color: #ffffff; font-size: 1.1rem; margin-bottom: 8px; }
+        .flow-step p { color: var(--c2); font-size: 0.9rem; line-height: 1.5; }
+
+        /* Mission Control Section (Dashboard) */
+        .dashboard-section {
+            background: #ffffff;
+            border-top: 1px solid var(--c1);
+            border-bottom: 1px solid var(--c1);
+            padding: 100px 24px;
+        }
+
+        .dashboard-wrapper {
+            max-width: 1320px;
+            margin: 0 auto;
+        }
+
+        .dash-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 1024px) {
+            .dash-layout { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--c1);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .card-header {
+            margin-bottom: 28px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .card-title {
+            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em;
+            color: var(--c4); font-weight: 700;
+            display: flex; align-items: center; gap: 10px;
+        }
         
+        /* Agent Simulator Buttons */
+        .agent-list { display: flex; flex-direction: column; gap: 14px; }
         .agent-btn {
-            width: 100%; padding: 16px;
-            background: var(--bg-surface); border: 1px solid var(--border-light);
+            width: 100%; padding: 20px;
+            background: var(--bg-main); border: 1px solid var(--border-light);
             border-radius: var(--radius-md); text-align: left;
-            cursor: pointer; transition: all 0.2s ease;
-            margin-bottom: 12px;
+            cursor: pointer; transition: var(--transition);
+            display: flex; flex-direction: column; gap: 6px;
         }
-        .agent-btn:hover { border-color: var(--brand-primary); box-shadow: var(--shadow-sm); }
-        .agent-title { font-weight: 700; color: var(--text-heading); display: block; margin-bottom: 4px; }
-        .agent-cost { font-size: 13px; color: var(--text-muted); }
+        .agent-btn:hover {
+            background: #ffffff; border-color: var(--c3);
+            box-shadow: var(--shadow-subtle); transform: translateY(-2px);
+        }
+        .agent-title { font-weight: 700; color: var(--c6); font-size: 15px; }
+        .agent-cost { font-size: 13px; color: var(--c4); }
 
-        .dash-main { padding: 32px; display: flex; flex-direction: column; gap: 32px; }
-
-        /* Telemetry Cards */
-        .telemetry { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        /* Telemetry Metrics */
+        .telemetry-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px; margin-bottom: 32px;
+        }
         .metric-card {
-            background: var(--bg-surface); border: 1px solid var(--border-light);
-            padding: 24px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
+            padding: 24px; border: 1px solid var(--c1); border-radius: var(--radius-md);
+            background: var(--bg-main); transition: var(--transition);
         }
-        .metric-label { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
-        .metric-value { font-size: 32px; font-weight: 800; color: var(--text-heading); font-variant-numeric: tabular-nums; }
+        .metric-card:hover { border-color: var(--c2); background: #ffffff; }
+        .metric-label { font-size: 12px; color: var(--c4); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+        .metric-value { font-size: 2.2rem; font-weight: 600; color: var(--c6); letter-spacing: -0.02em; }
 
-        /* Ledger Feed */
-        .ledger-feed { border: 1px solid var(--border-light); border-radius: var(--radius-md); overflow: hidden; }
+        /* Ledger Feed Table */
+        .ledger-container {
+            border: 1px solid var(--c1); border-radius: var(--radius-md); background: #ffffff; overflow: hidden;
+        }
+        .ledger-header {
+            padding: 16px 24px; background: var(--c1);
+            font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--c6); font-weight: 700;
+            display: grid; grid-template-columns: 110px 150px 1fr 110px; gap: 16px;
+        }
         .ledger-row {
-            padding: 16px 24px; border-bottom: 1px solid var(--border-light);
-            display: grid; grid-template-columns: 100px 140px 1fr 100px; gap: 16px; align-items: center;
+            padding: 18px 24px; border-bottom: 1px solid var(--c1);
+            display: grid; grid-template-columns: 110px 150px 1fr 110px; gap: 16px; align-items: center;
+            font-size: 14px;
         }
         .ledger-row:last-child { border-bottom: none; }
-        .ledger-row:nth-child(even) { background: #F8FAFC; }
         
-        .badge { padding: 4px 12px; border-radius: var(--radius-full); font-size: 12px; font-weight: 700; text-align: center; }
-        .badge.approved { background: #D1FAE5; color: #065F46; }
-        .badge.blocked { background: #FEE2E2; color: #991B1B; }
-
-        .hash-id { font-size: 13px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; }
-
-        .verify-banner {
-            background: var(--brand-dark); color: #fff;
-            padding: 24px 32px; display: flex; justify-content: space-between; align-items: center;
+        .badge {
+            padding: 6px 12px; border-radius: var(--radius-full); font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: fit-content;
         }
+        .badge.approved { background: var(--c1); color: var(--c6); border: 1px solid var(--c2); }
+        .badge.blocked { background: var(--c6); color: #ffffff; border: 1px solid var(--c5); }
+
+        .hash-id { color: var(--c4); font-size: 13px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+
+        /* Info & Remediation Box */
+        .info-box {
+            margin-top: 24px; padding: 24px; border-radius: var(--radius-md);
+            background: var(--c1); border: 1px solid var(--c2);
+        }
+        .info-box h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; color: var(--c6); font-weight: 700; }
+        .info-box p { font-size: 13.5px; color: var(--c5); line-height: 1.5; }
         
+        .code-snippet {
+            margin-top: 14px; padding: 18px; background: var(--c6); color: var(--c1);
+            border-radius: var(--radius-sm); font-size: 11px; overflow-x: auto; line-height: 1.5;
+        }
+
+        /* Verification Banner */
+        .verify-banner {
+            margin-top: 32px; padding: 32px; border-radius: var(--radius-lg);
+            background: var(--c6); color: #ffffff;
+            display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap;
+        }
+        .verify-banner h3 { color: #ffffff; font-size: 1.35rem; font-weight: 600; margin-bottom: 6px; }
+        .verify-banner p { color: var(--c2); font-size: 14px; }
+
+        /* Footer */
+        footer {
+            background: var(--c6); color: var(--c2);
+            padding: 60px 24px 40px; text-align: center; font-size: 14px;
+        }
+        footer p { color: var(--c3); margin-top: 8px; font-size: 13px; }
+
+        /* Inline SVG Helper */
+        svg.icon { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; flex-shrink: 0; }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-brand">
-            <div class="nav-brand-icon"></div>
+    <!-- Floating Pill Header -->
+    <header>
+        <a href="#" class="brand-logo">
+            <div class="brand-icon-wrapper">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            </div>
             StudioGate
-        </div>
-        <div class="nav-links">
-            <a href="#">Platform</a>
-            <a href="#">Solutions</a>
-            <a href="#">Resources</a>
-            <a href="#">Pricing</a>
-        </div>
-        <div style="display: flex; gap: 16px; align-items: center;">
-            <a href="#" style="font-weight: 600; text-decoration: none; color: var(--text-heading);">Sign in</a>
-            <a href="#demo" class="btn btn-primary">Book a demo</a>
-        </div>
-    </nav>
+        </a>
+        <ul class="nav-menu">
+            <li><a href="#features">Architecture</a></li>
+            <li><a href="#flow">How It Works</a></li>
+            <li><a href="#demo">Live Console</a></li>
+        </ul>
+        <a href="#demo" class="btn btn-primary">
+            Launch Console
+            <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+        </a>
+    </header>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Cross-channel pipeline automation.</h1>
-            <p>Turn rendering data into deterministic governance that stops runaway cloud costs across all your autonomous agents.</p>
-            <div class="hero-actions">
-                <a href="#demo" class="btn btn-primary">Try interactive demo</a>
-                <a href="#" class="btn btn-secondary">Explore platform</a>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="eyebrow-pill">
+            <svg class="icon" style="width:14px; height:14px;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            ClickHouse Partner Track • Agentic Cinema 2026
+        </div>
+        <h1 class="hero-title font-serif">Deterministic Governance for Autonomous Rendering</h1>
+        <p class="hero-sub">StudioGate turns rendering telemetry into sub-millisecond cost guardrails. Stop runaway cloud GPU burn before jobs dispatch to the farm.</p>
+        
+        <div class="hero-ctas">
+            <a href="#demo" class="btn btn-primary">
+                Explore Mission Control
+                <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+            </a>
+            <a href="#features" class="btn btn-outline">
+                Technical Specifications
+            </a>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-num font-serif">&lt;1.2ms</div>
+                <div class="stat-label">Verification Latency</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num font-serif">50,000+</div>
+                <div class="stat-label">Seeded Telemetry Rows</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num font-serif">100%</div>
+                <div class="stat-label">SHA-256 Audit Trail</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num font-serif">Zero</div>
+                <div class="stat-label">LLM Hallucination Risk</div>
             </div>
         </div>
-        <div class="hero-visual">
-            <!-- WebGL Flow Field gets injected here -->
-            <div id="ink-container"></div>
-            <div class="hero-visual-overlay"></div>
-        </div>
     </section>
 
-    <section class="logo-strip">
-        <p>Trusted by the world's leading cloud architecture</p>
-        <div class="logos">
-            <span>ClickHouse Cloud</span>
-            <span>Google Gemini</span>
-            <span>FastAPI</span>
-        </div>
-    </section>
+    <!-- Invisible ink container for flow field compatibility -->
+    <div id="ink-container" style="display:none;"></div>
 
-    <section class="demo-section" id="demo">
-        <div class="demo-header">
-            <h2>Mission Control Dashboard</h2>
-            <p style="font-size: 20px; color: var(--text-muted);">Experience pure deterministic policy evaluation backed by a cryptographic ledger.</p>
+    <!-- Informative Technical Features -->
+    <section id="features" class="section-wrapper">
+        <div class="section-header">
+            <span class="eyebrow-pill">Core Capabilities</span>
+            <h2 class="font-serif">Why StudioGate Wins</h2>
+            <p>Autonomous AI agents can spawn thousands of render frames in seconds. StudioGate acts as the immutable firewall between AI agents and cloud budget cap collapse.</p>
         </div>
 
-        <div class="dashboard-container">
-            <div class="dash-header">
-                <h3>Live Operations</h3>
-                <div style="display: flex; gap: 12px; align-items: center;">
-                    <span style="display: block; width: 8px; height: 8px; background: var(--status-ok); border-radius: 50%;"></span>
-                    <span style="font-size: 14px; font-weight: 600; color: var(--text-muted);">Connected to ClickHouse Cloud</span>
+        <div class="feature-grid">
+            <!-- Feature 1 -->
+            <div class="feature-card">
+                <div>
+                    <div class="feature-icon-box">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                    </div>
+                    <h3>ClickHouse Cloud Telemetry</h3>
+                    <p>Aggregates 1-hour rolling GPU burn directly in ClickHouse Cloud using optimized SQL aggregations, retrieving exact live totals in under 2 milliseconds.</p>
+                </div>
+                <span class="feature-tag">ClickHouse Cloud</span>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="feature-card">
+                <div>
+                    <div class="feature-icon-box">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <h3>Deterministic Policy Check</h3>
+                    <p>Pure Python arithmetic evaluates rolling burn plus requested job cost against hard caps. Zero LLMs touch the budget verdict to ensure zero hallucinations.</p>
+                </div>
+                <span class="feature-tag">Pure Python Engine</span>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="feature-card">
+                <div>
+                    <div class="feature-icon-box">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"></path></svg>
+                    </div>
+                    <h3>Cryptographic SHA-256 Ledger</h3>
+                    <p>Every single decision (APPROVED or BLOCKED) is hashed into an immutable cryptographic chain. Any tampered row invalidates the entire governance ledger.</p>
+                </div>
+                <span class="feature-tag">SHA-256 Cryptographic Chain</span>
+            </div>
+        </div>
+
+        <!-- Architecture Flow Diagram Box -->
+        <div id="flow" class="flow-container">
+            <h3 class="flow-title font-serif">End-to-End Governance Execution Flow</h3>
+            <p class="flow-subtitle">How StudioGate processes autonomous agent render requests in real time.</p>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="flow-step-num">Step 01</div>
+                    <h4>Agent Dispatch</h4>
+                    <p>Autonomous VFX / Lighting agent requests a high-resolution render job with projected cost.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">Step 02</div>
+                    <h4>ClickHouse Query</h4>
+                    <p>FastAPI queries ClickHouse Cloud for the exact 1-hour rolling burn across all active studio nodes.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">Step 03</div>
+                    <h4>Policy Evaluation</h4>
+                    <p>Deterministic evaluation calculates projected sum vs hard budget threshold cap.</p>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-num">Step 04</div>
+                    <h4>Ledger & Remediation</h4>
+                    <p>Job is logged to SHA-256 hash chain. If blocked, Gemini AI generates cost-saving alternatives.</p>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <div class="dash-grid">
-                <!-- Sidebar: Agent Simulator -->
-                <div class="dash-sidebar">
-                    <div class="control-group">
-                        <h4>Autonomous Agent Simulator</h4>
-                        
+    <!-- Mission Control Dashboard Console -->
+    <section id="demo" class="dashboard-section">
+        <div class="dashboard-wrapper">
+            <div class="section-header" style="margin-bottom: 48px;">
+                <span class="eyebrow-pill">Interactive Console</span>
+                <h2 class="font-serif">Mission Control Dashboard</h2>
+                <p>Simulate autonomous agent render submissions and observe real-time ClickHouse aggregation and cryptographic ledger logging.</p>
+            </div>
+
+            <div class="dash-layout">
+                <!-- Sidebar: Agent Simulator & Architectural Info -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>
+                            Agent Simulator
+                        </div>
+                    </div>
+                    
+                    <div class="agent-list">
                         <button class="agent-btn" onclick="submitJob('8K Final Pass', 7200, 0.58)">
-                            <span class="agent-title">Agent VFX_09 // 8K Final</span>
-                            <span class="agent-cost">Projected: $4,176.00</span>
+                            <span class="agent-title">Agent VFX_09 // 8K Final Pass</span>
+                            <span class="agent-cost font-mono">Projected Cost: $4,176.00</span>
                         </button>
-
                         <button class="agent-btn" onclick="submitJob('4K Plate Pass', 1200, 0.15)">
                             <span class="agent-title">Agent LGT_02 // 4K Plates</span>
-                            <span class="agent-cost">Projected: $180.00</span>
+                            <span class="agent-cost font-mono">Projected Cost: $180.00</span>
                         </button>
-                        
                         <button class="agent-btn" onclick="submitJob('Smoke Sim', 450, 0.08)">
                             <span class="agent-title">Agent FX_04 // Smoke Sim</span>
-                            <span class="agent-cost">Projected: $36.00</span>
+                            <span class="agent-cost font-mono">Projected Cost: $36.00</span>
                         </button>
                     </div>
 
-                    <div id="remediation-box" style="display:none; padding: 16px; background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 8px;">
-                        <h4 style="color: #92400E; margin-bottom: 8px;">Gemini AI Remediation</h4>
-                        <p id="remediation-text" style="font-size: 13px; color: #92400E;"></p>
+                    <!-- Gemini AI Remediation Card -->
+                    <div id="remediation-box" class="info-box" style="display:none; background: var(--c6); border-color: var(--c5);">
+                        <h4 style="color: #ffffff;">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 6v6l4 2"></path></svg>
+                            Gemini ADK Remediation
+                        </h4>
+                        <p id="remediation-text" style="color: var(--c1);"></p>
                     </div>
 
-                    <div style="margin-top: 8px; padding: 14px; background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 8px;">
-                        <p style="font-size: 13px; font-weight: 700; color: #3730A3; margin-bottom: 6px;">
-                            🛡️ Architectural Rule:
-                        </p>
-                        <p style="font-size: 12px; color: #4338CA; line-height: 1.4; margin-bottom: 8px;">
-                            Gemini never touches the pass/fail decision. The policy engine is pure Python arithmetic. Here's the code:
-                        </p>
-                        <details style="cursor: pointer;">
-                            <summary style="font-size: 12px; font-weight: 600; color: var(--brand-primary);">View policy_engine.py logic</summary>
-                            <pre class="font-mono" style="margin-top: 8px; padding: 10px; background: #1E1B4B; color: #A5B4FC; border-radius: 6px; font-size: 11px; overflow-x: auto; line-height: 1.4;"><code>def evaluate_policy(rolling_burn_usd, requested_job_cost_usd, hard_budget_cap_usd):
-    projected_total = round(rolling_burn_usd + requested_job_cost_usd, 2)
-    if projected_total > hard_budget_cap_usd:
-        return {
-            "verdict": "BLOCKED",
-            "projected_total": projected_total,
-            "overage": round(projected_total - hard_budget_cap_usd, 2),
-            "rolling_burn_usd": rolling_burn_usd,
-            "requested_job_cost_usd": requested_job_cost_usd,
-            "hard_budget_cap_usd": hard_budget_cap_usd,
-        }
-    return {
-        "verdict": "APPROVED",
-        "projected_total": projected_total,
-        "overage": 0.0,
-        "rolling_burn_usd": rolling_burn_usd,
-        "requested_job_cost_usd": requested_job_cost_usd,
-        "hard_budget_cap_usd": hard_budget_cap_usd,
-    }</code></pre>
+                    <!-- Code Logic Explainer -->
+                    <div class="info-box" style="margin-top: 28px;">
+                        <h4>
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            Architectural Rule
+                        </h4>
+                        <p style="margin-bottom: 10px;">Gemini never touches pass/fail decisions. Policy evaluation is pure Python math:</p>
+                        <details>
+                            <summary style="font-size: 13px; font-weight: 700; cursor: pointer; color: var(--c4);">View policy_engine.py logic</summary>
+                            <div class="code-snippet font-mono">
+<pre>def evaluate_policy(rolling_burn, req_cost, cap):
+    projected = round(rolling_burn + req_cost, 2)
+    if projected > cap:
+        return {"verdict": "BLOCKED", "overage": projected - cap}
+    return {"verdict": "APPROVED", "overage": 0.0}</pre>
+                            </div>
                         </details>
                     </div>
                 </div>
 
-                <!-- Main: Telemetry & Ledger -->
-                <div class="dash-main">
-                    
-                    <div class="telemetry">
-                        <div class="metric-card">
-                            <div class="metric-label">1-Hour Rolling Burn</div>
-                            <div class="metric-value font-mono" id="val-burn">$0.00</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Hard Budget Cap</div>
-                            <div class="metric-value font-mono" id="val-cap">$500.00</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Available Headroom</div>
-                            <div class="metric-value font-mono" id="val-headroom">$500.00</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Processed Jobs</div>
-                            <div class="metric-value font-mono" id="val-jobs">0</div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 style="margin-bottom: 16px; font-size: 16px;">Cryptographic Audit Ledger</h4>
-                        <div class="ledger-feed">
-                            <div id="ledger-rows">
-                                <!-- JS inserts rows here -->
+                <!-- Main Console View -->
+                <div>
+                    <!-- Header Bar -->
+                    <div class="card" style="margin-bottom: 24px; padding: 20px 28px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div class="card-title" style="margin: 0;">
+                                <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                                Live Operations Monitor
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--c4); font-weight: 600;">
+                                <svg class="icon" style="width:14px; height:14px; color: var(--c3);" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="6"></circle></svg>
+                                ClickHouse Cloud Connected
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Footer Banner -->
-            <div class="verify-banner">
-                <div>
-                    <h4 style="color: #fff; margin-bottom: 4px;">Cryptographic Verification</h4>
-                    <p style="color: #94A3B8; font-size: 14px;">Walk the SHA-256 hash chain to guarantee zero-tampering.</p>
+                    <!-- Metric Cards -->
+                    <div class="telemetry-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">1-Hr Rolling Burn</div>
+                            <div class="metric-value font-serif" id="val-burn">$0.00</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Hard Cap Cap</div>
+                            <div class="metric-value font-serif" id="val-cap">$500.00</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Available Headroom</div>
+                            <div class="metric-value font-serif" id="val-headroom">$500.00</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Processed Jobs</div>
+                            <div class="metric-value font-serif" id="val-jobs">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Ledger Feed -->
+                    <div class="card" style="padding: 0; overflow: hidden;">
+                        <div class="ledger-header">
+                            <div>Status</div>
+                            <div>Agent Task</div>
+                            <div>SHA-256 Ledger Hash</div>
+                            <div style="text-align: right;">Cost Impact</div>
+                        </div>
+                        <div class="ledger-container" style="border: none; border-radius: 0;">
+                            <div id="ledger-rows">
+                                <!-- Dynamic JS ledger rows -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Verification Banner -->
+                    <div class="verify-banner">
+                        <div>
+                            <h3 class="font-serif">Cryptographic Verification</h3>
+                            <p>Verify contiguity across all SHA-256 ledger blocks to guarantee zero tampering.</p>
+                        </div>
+                        <button class="btn btn-outline" style="background: #ffffff; color: var(--c6); border-color: var(--c1);" onclick="verifyChain()">
+                            Verify Ledger Chain
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </button>
+                    </div>
                 </div>
-                <button class="btn btn-primary" style="background: #fff; color: var(--brand-dark);" onclick="verifyChain()">Verify Ledger Chain</button>
             </div>
         </div>
     </section>
 
-    <!-- External Script for UI Logic -->
+    <!-- Footer -->
+    <footer>
+        <div style="font-weight: 700; color: #ffffff; font-size: 16px;">StudioGate — Autonomous Pipeline Governance</div>
+        <p>Built for Google Cloud Agentic Cinema Hackathon • ClickHouse Cloud Partner Track</p>
+    </footer>
+
+    <!-- JS Logic -->
     <script src="/static/ink.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const inkBg = document.getElementById('ink-container');
             if (inkBg && typeof InkFlowField !== 'undefined') {
                 new InkFlowField(inkBg, {
-                    colors: ["#E0E7FF", "#C7D2FE", "#818CF8", "#4F46E5", "#3730A3"]
+                    colors: ["#c0e6fd", "#80aad3", "#5b86b6"]
                 });
             }
             refreshBurnData();
@@ -410,11 +674,16 @@
                     const el = document.createElement('div');
                     el.className = 'ledger-row font-mono';
                     const isApproved = entry.verdict === 'APPROVED';
+                    
+                    const iconSvg = isApproved 
+                        ? '<svg class="icon" style="width:12px;height:12px;" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>'
+                        : '<svg class="icon" style="width:12px;height:12px;" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"></path></svg>';
+                    
                     el.innerHTML = `
-                        <div class="badge ${isApproved ? 'approved' : 'blocked'}">${entry.verdict}</div>
-                        <div style="font-size: 13px;">${entry.target_job}</div>
+                        <div class="badge ${isApproved ? 'approved' : 'blocked'}">${iconSvg} ${entry.verdict}</div>
+                        <div style="font-weight: 600; color: var(--c6); font-family: 'Plus Jakarta Sans', sans-serif;">${entry.target_job}</div>
                         <div class="hash-id">${entry.entry_hash}</div>
-                        <div style="text-align: right; font-weight: 700;">$${entry.rolling_burn_usd.toFixed(2)}</div>
+                        <div style="text-align: right; font-weight: 700; color: var(--c6);">$${entry.rolling_burn_usd.toFixed(2)}</div>
                     `;
                     container.appendChild(el);
                 });
@@ -447,9 +716,9 @@
                 const r = await fetch('/api/verify-chain');
                 const data = await r.json();
                 if (data.is_valid) {
-                    alert(`✅ Chain Verified!\nValidated ${data.total_entries} contiguous cryptographic blocks.`);
+                    alert(`Chain Verified!\nValidated ${data.total_entries} contiguous cryptographic blocks.`);
                 } else {
-                    alert(`❌ Chain Corrupted!\nError: ${data.error}`);
+                    alert(`Chain Corrupted!\nError: ${data.error}`);
                 }
             } catch (e) { console.error(e); }
         }
