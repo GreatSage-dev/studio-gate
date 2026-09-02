@@ -54,38 +54,61 @@
         .font-mono { font-family: 'JetBrains Mono', monospace; }
 
         h1, h2, h3, h4 { color: var(--c6); line-height: 1.15; font-weight: 700; }
+
+        /* Outer Header Banner Container with uploaded background */
+        .hero-banner-wrapper {
+            position: relative;
+            background: var(--c6) url('/static/header_bg.png') no-repeat center top / cover;
+            color: #ffffff;
+            padding-bottom: 100px;
+            border-bottom: 1px solid var(--c4);
+            overflow: hidden;
+        }
         
-        /* Floating Pill Navbar */
+        .hero-banner-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, rgba(0, 15, 34, 0.2) 0%, rgba(0, 15, 34, 0.8) 100%);
+            pointer-events: none;
+        }
+        
+        .hero-content-inner {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Floating Pill Navbar on Dark Image Header */
         header {
             position: fixed;
             top: 24px; left: 50%; transform: translateX(-50%);
             width: min(1200px, 92%);
-            background: rgba(255, 255, 255, 0.88);
+            background: rgba(0, 15, 34, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--c1);
+            border: 1px solid rgba(192, 230, 253, 0.3);
             padding: 12px 28px;
             border-radius: var(--radius-full);
             display: flex; align-items: center; justify-content: space-between;
             z-index: 1000;
-            box-shadow: var(--shadow-subtle);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .brand-logo {
             display: flex; align-items: center; gap: 10px;
-            text-decoration: none; color: var(--c6); font-weight: 800; font-size: 17px;
+            text-decoration: none; color: #ffffff; font-weight: 800; font-size: 17px;
             letter-spacing: -0.03em;
         }
         
         .brand-icon-wrapper {
             width: 32px; height: 32px; border-radius: 8px;
-            background: var(--c6); color: var(--c1);
+            background: var(--c1); color: var(--c6);
             display: flex; align-items: center; justify-content: center;
         }
 
         .nav-menu { display: flex; gap: 32px; font-size: 14px; font-weight: 600; list-style: none; }
-        .nav-menu a { color: var(--c4); text-decoration: none; transition: var(--transition); }
-        .nav-menu a:hover { color: var(--c6); }
+        .nav-menu a { color: var(--c1); text-decoration: none; transition: var(--transition); }
+        .nav-menu a:hover { color: #ffffff; }
 
         .btn {
             display: inline-flex; align-items: center; gap: 10px; justify-content: center;
@@ -94,25 +117,25 @@
             text-decoration: none; cursor: pointer; transition: var(--transition);
             border: none; outline: none;
         }
-        .btn-primary { background: var(--c6); color: #ffffff; }
-        .btn-primary:hover { background: var(--c5); box-shadow: var(--shadow-card); transform: translateY(-2px); }
+        .btn-primary { background: var(--c1); color: var(--c6); }
+        .btn-primary:hover { background: #ffffff; box-shadow: 0 8px 24px rgba(192, 230, 253, 0.3); transform: translateY(-2px); }
         
-        .btn-outline { background: var(--bg-card); color: var(--c6); border: 1px solid var(--c2); }
-        .btn-outline:hover { border-color: var(--c4); background: var(--c1); transform: translateY(-1px); }
+        .btn-outline { background: rgba(255, 255, 255, 0.08); color: #ffffff; border: 1px solid rgba(192, 230, 253, 0.4); backdrop-filter: blur(8px); }
+        .btn-outline:hover { border-color: var(--c1); background: rgba(192, 230, 253, 0.2); transform: translateY(-1px); }
 
         /* Eyebrow Pill */
         .eyebrow-pill {
             display: inline-flex; align-items: center; gap: 8px;
-            padding: 6px 16px; border-radius: var(--radius-full);
-            background: rgba(192, 230, 253, 0.4); border: 1px solid var(--c2);
-            color: var(--c5); font-size: 12px; font-weight: 700;
+            padding: 6px 18px; border-radius: var(--radius-full);
+            background: rgba(192, 230, 253, 0.15); border: 1px solid rgba(192, 230, 253, 0.4);
+            color: var(--c1); font-size: 12px; font-weight: 700;
             text-transform: uppercase; letter-spacing: 0.08em;
-            margin-bottom: 24px;
+            margin-bottom: 24px; backdrop-filter: blur(8px);
         }
 
         /* Hero Section */
         .hero-section {
-            padding: 170px 24px 80px;
+            padding: 170px 24px 40px;
             max-width: 1240px;
             margin: 0 auto;
             text-align: center;
@@ -121,22 +144,24 @@
         .hero-title {
             font-size: clamp(2.8rem, 5.5vw, 4.8rem);
             letter-spacing: -0.03em;
-            color: var(--c6);
+            color: #ffffff;
             margin-bottom: 24px;
             font-weight: 600;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
 
         .hero-sub {
             font-size: clamp(1.1rem, 1.8vw, 1.35rem);
-            color: var(--c4);
+            color: var(--c1);
             max-width: 760px;
             margin: 0 auto 40px;
             font-weight: 400;
+            opacity: 0.95;
         }
 
         .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 64px; }
 
-        /* Stats Grid Bar */
+        /* Glassmorphic Stats Grid Bar */
         .stats-bar {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -147,16 +172,18 @@
         }
 
         .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
+            background: rgba(0, 15, 34, 0.65);
+            border: 1px solid rgba(192, 230, 253, 0.25);
             border-radius: var(--radius-md);
             padding: 24px;
-            box-shadow: var(--shadow-subtle);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             transition: var(--transition);
         }
-        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); border-color: var(--c2); }
-        .stat-num { font-size: 2rem; font-weight: 700; color: var(--c6); line-height: 1.1; margin-bottom: 4px; }
-        .stat-label { font-size: 13px; font-weight: 600; color: var(--c4); text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-card:hover { transform: translateY(-3px); border-color: var(--c1); background: rgba(0, 15, 34, 0.8); }
+        .stat-num { font-size: 2rem; font-weight: 700; color: #ffffff; line-height: 1.1; margin-bottom: 4px; }
+        .stat-label { font-size: 13px; font-weight: 600; color: var(--c1); text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.85; }
 
         /* Informative Section: Architecture & Technical Guardrails */
         .section-wrapper { padding: 90px 24px; max-width: 1240px; margin: 0 auto; }
@@ -364,64 +391,69 @@
 </head>
 <body>
 
-    <!-- Floating Pill Header -->
-    <header>
-        <a href="#" class="brand-logo">
-            <div class="brand-icon-wrapper">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-            </div>
-            StudioGate
-        </a>
-        <ul class="nav-menu">
-            <li><a href="#features">Architecture</a></li>
-            <li><a href="#flow">How It Works</a></li>
-            <li><a href="#demo">Live Console</a></li>
-        </ul>
-        <a href="#demo" class="btn btn-primary">
-            Launch Console
-            <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-        </a>
-    </header>
+    <!-- Outer Header Banner Wrapper with Image Background -->
+    <div class="hero-banner-wrapper">
+        <div class="hero-content-inner">
+            <!-- Floating Pill Header -->
+            <header>
+                <a href="#" class="brand-logo">
+                    <div class="brand-icon-wrapper">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                    </div>
+                    StudioGate
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="#features">Architecture</a></li>
+                    <li><a href="#flow">How It Works</a></li>
+                    <li><a href="#demo">Live Console</a></li>
+                </ul>
+                <a href="#demo" class="btn btn-primary">
+                    Launch Console
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                </a>
+            </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="eyebrow-pill">
-            <svg class="icon" style="width:14px; height:14px;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-            ClickHouse Partner Track • Agentic Cinema 2026
-        </div>
-        <h1 class="hero-title font-serif">Deterministic Governance for Autonomous Rendering</h1>
-        <p class="hero-sub">StudioGate turns rendering telemetry into sub-millisecond cost guardrails. Stop runaway cloud GPU burn before jobs dispatch to the farm.</p>
-        
-        <div class="hero-ctas">
-            <a href="#demo" class="btn btn-primary">
-                Explore Mission Control
-                <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
-            </a>
-            <a href="#features" class="btn btn-outline">
-                Technical Specifications
-            </a>
-        </div>
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="eyebrow-pill">
+                    <svg class="icon" style="width:14px; height:14px;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    ClickHouse Partner Track • Agentic Cinema 2026
+                </div>
+                <h1 class="hero-title font-serif">Deterministic Governance for Autonomous Rendering</h1>
+                <p class="hero-sub">StudioGate turns rendering telemetry into sub-millisecond cost guardrails. Stop runaway cloud GPU burn before jobs dispatch to the farm.</p>
+                
+                <div class="hero-ctas">
+                    <a href="#demo" class="btn btn-primary">
+                        Explore Mission Control
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    </a>
+                    <a href="#features" class="btn btn-outline">
+                        Technical Specifications
+                    </a>
+                </div>
 
-        <!-- Metric Stat Cards -->
-        <div class="stats-bar">
-            <div class="stat-card">
-                <div class="stat-num font-serif">&lt;1.2ms</div>
-                <div class="stat-label">Verification Latency</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-num font-serif">50,000+</div>
-                <div class="stat-label">Seeded Telemetry Rows</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-num font-serif">100%</div>
-                <div class="stat-label">SHA-256 Audit Trail</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-num font-serif">Zero</div>
-                <div class="stat-label">LLM Hallucination Risk</div>
-            </div>
+                <!-- Glassmorphic Metric Stat Cards -->
+                <div class="stats-bar">
+                    <div class="stat-card">
+                        <div class="stat-num font-serif">&lt;1.2ms</div>
+                        <div class="stat-label">Verification Latency</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num font-serif">50,000+</div>
+                        <div class="stat-label">Seeded Telemetry Rows</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num font-serif">100%</div>
+                        <div class="stat-label">SHA-256 Audit Trail</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num font-serif">Zero</div>
+                        <div class="stat-label">LLM Hallucination Risk</div>
+                    </div>
+                </div>
+            </section>
         </div>
-    </section>
+    </div>
 
     <!-- Invisible ink container for flow field compatibility -->
     <div id="ink-container" style="display:none;"></div>
@@ -429,7 +461,7 @@
     <!-- Informative Technical Features -->
     <section id="features" class="section-wrapper">
         <div class="section-header">
-            <span class="eyebrow-pill">Core Capabilities</span>
+            <span class="eyebrow-pill" style="background: rgba(192, 230, 253, 0.4); color: var(--c5); border-color: var(--c2);">Core Capabilities</span>
             <h2 class="font-serif">Why StudioGate Wins</h2>
             <p>Autonomous AI agents can spawn thousands of render frames in seconds. StudioGate acts as the immutable firewall between AI agents and cloud budget cap collapse.</p>
         </div>
@@ -506,7 +538,7 @@
     <section id="demo" class="dashboard-section">
         <div class="dashboard-wrapper">
             <div class="section-header" style="margin-bottom: 48px;">
-                <span class="eyebrow-pill">Interactive Console</span>
+                <span class="eyebrow-pill" style="background: rgba(192, 230, 253, 0.4); color: var(--c5); border-color: var(--c2);">Interactive Console</span>
                 <h2 class="font-serif">Mission Control Dashboard</h2>
                 <p>Simulate autonomous agent render submissions and observe real-time ClickHouse aggregation and cryptographic ledger logging.</p>
             </div>
