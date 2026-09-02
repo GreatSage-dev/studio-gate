@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudioGate — Autonomous Pipeline Governance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --brand-primary: #5832E2;
+            --brand-primary-hover: #4524C4;
+            --brand-secondary: #00D084;
+            --brand-dark: #0A0A14;
+            
+            --bg-page: #F8FAFC;
+            --bg-surface: #FFFFFF;
+            
+            --text-heading: #0F172A;
+            --text-body: #475569;
+            --text-muted: #94A3B8;
+            
+            --border-light: #E2E8F0;
+            
+            --status-ok: #10B981;
+            --status-warn: #F59E0B;
+            --status-err: #EF4444;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            --radius-md: 8px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        h1, h2, h3, h4 { color: var(--text-heading); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            z-index: 100;
+        }
+
+        .nav-brand { font-size: 20px; font-weight: 800; color: var(--brand-primary); display: flex; align-items: center; gap: 8px; }
+        .nav-brand-icon { width: 24px; height: 24px; background: var(--brand-primary); border-radius: 6px; }
+        
+        .nav-links { display: flex; gap: 32px; font-weight: 600; font-size: 15px; }
+        .nav-links a { color: var(--text-heading); text-decoration: none; transition: color 0.2s ease; }
+        .nav-links a:hover { color: var(--brand-primary); }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 14px 28px;
+            font-weight: 700; font-size: 15px;
+            border-radius: var(--radius-full);
+            text-decoration: none; border: none; cursor: pointer;
+            transition: all 0.3s var(--ease);
+        }
+        .btn-primary { background: var(--brand-primary); color: #fff; }
+        .btn-primary:hover { background: var(--brand-primary-hover); transform: translateY(-2px); box-shadow: 0 8px 16px rgba(88, 50, 226, 0.25); }
+        .btn-secondary { background: transparent; color: var(--text-heading); border: 2px solid var(--border-light); }
+        .btn-secondary:hover { border-color: var(--text-heading); background: var(--bg-page); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            padding: 160px 48px 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .hero-content h1 { font-size: 64px; margin-bottom: 24px; }
+        .hero-content p { font-size: 20px; margin-bottom: 40px; color: var(--text-body); max-width: 520px; }
+        .hero-actions { display: flex; gap: 16px; }
+
+        .hero-visual {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+        
+        #ink-container { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+        
+        .hero-visual-overlay {
+            position: absolute; inset: 0; z-index: 2;
+            pointer-events: none;
+            display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle at center, transparent 30%, rgba(255,255,255,0.8) 100%);
+        }
+
+        /* --- LOGO STRIP --- */
+        .logo-strip {
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-surface);
+            padding: 40px 0;
+            text-align: center;
+        }
+        .logo-strip p { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 24px; }
+        .logos { display: flex; justify-content: center; gap: 64px; align-items: center; opacity: 0.6; }
+        .logos span { font-size: 24px; font-weight: 800; color: var(--text-heading); }
+
+        /* --- DASHBOARD DEMO SECTION --- */
+        .demo-section { padding: 120px 48px; background: var(--bg-page); }
+        .demo-header { text-align: center; max-width: 800px; margin: 0 auto 64px; }
+        .demo-header h2 { font-size: 48px; margin-bottom: 16px; }
+
+        .dashboard-container {
+            max-width: 1400px; margin: 0 auto;
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dash-header {
+            padding: 24px 32px; border-bottom: 1px solid var(--border-light);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .dash-header h3 { font-size: 20px; }
+        
+        .dash-grid {
+            display: grid; grid-template-columns: 350px 1fr;
+        }
+
+        .dash-sidebar {
+            background: #F8FAFC; border-right: 1px solid var(--border-light);
+            padding: 32px; display: flex; flex-direction: column; gap: 24px;
+        }
+
+        .control-group h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 16px; }
+        
+        .agent-btn {
+            width: 100%; padding: 16px;
+            background: var(--bg-surface); border: 1px solid var(--border-light);
+            border-radius: var(--radius-md); text-align: left;
+            cursor: pointer; transition: all 0.2s ease;
+            margin-bottom: 12px;
+        }
+        .agent-btn:hover { border-color: var(--brand-primary); box-shadow: var(--shadow-sm); }
+        .agent-title { font-weight: 700; color: var(--text-heading); display: block; margin-bottom: 4px; }
+        .agent-cost { font-size: 13px; color: var(--text-muted); }
+
+        .dash-main { padding: 32px; display: flex; flex-direction: column; gap: 32px; }
+
+        /* Telemetry Cards */
+        .telemetry { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .metric-card {
+            background: var(--bg-surface); border: 1px solid var(--border-light);
+            padding: 24px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
+        }
+        .metric-label { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
+        .metric-value { font-size: 32px; font-weight: 800; color: var(--text-heading); font-variant-numeric: tabular-nums; }
+
+        /* Ledger Feed */
+        .ledger-feed { border: 1px solid var(--border-light); border-radius: var(--radius-md); overflow: hidden; }
+        .ledger-row {
+            padding: 16px 24px; border-bottom: 1px solid var(--border-light);
+            display: grid; grid-template-columns: 100px 140px 1fr 100px; gap: 16px; align-items: center;
+        }
+        .ledger-row:last-child { border-bottom: none; }
+        .ledger-row:nth-child(even) { background: #F8FAFC; }
+        
+        .badge { padding: 4px 12px; border-radius: var(--radius-full); font-size: 12px; font-weight: 700; text-align: center; }
+        .badge.approved { background: #D1FAE5; color: #065F46; }
+        .badge.blocked { background: #FEE2E2; color: #991B1B; }
+
+        .hash-id { font-size: 13px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; }
+
+        .verify-banner {
+            background: var(--brand-dark); color: #fff;
+            padding: 24px 32px; display: flex; justify-content: space-between; align-items: center;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-brand-icon"></div>
+            StudioGate
+        </div>
+        <div class="nav-links">
+            <a href="#">Platform</a>
+            <a href="#">Solutions</a>
+            <a href="#">Resources</a>
+            <a href="#">Pricing</a>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center;">
+            <a href="#" style="font-weight: 600; text-decoration: none; color: var(--text-heading);">Sign in</a>
+            <a href="#demo" class="btn btn-primary">Book a demo</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Cross-channel pipeline automation.</h1>
+            <p>Turn rendering data into deterministic governance that stops runaway cloud costs across all your autonomous agents.</p>
+            <div class="hero-actions">
+                <a href="#demo" class="btn btn-primary">Try interactive demo</a>
+                <a href="#" class="btn btn-secondary">Explore platform</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <!-- WebGL Flow Field gets injected here -->
+            <div id="ink-container"></div>
+            <div class="hero-visual-overlay"></div>
+        </div>
+    </section>
+
+    <section class="logo-strip">
+        <p>Trusted by the world's leading cloud architecture</p>
+        <div class="logos">
+            <span>ClickHouse Cloud</span>
+            <span>Google Gemini</span>
+            <span>FastAPI</span>
+        </div>
+    </section>
+
+    <section class="demo-section" id="demo">
+        <div class="demo-header">
+            <h2>Mission Control Dashboard</h2>
+            <p style="font-size: 20px; color: var(--text-muted);">Experience pure deterministic policy evaluation backed by a cryptographic ledger.</p>
+        </div>
+
+        <div class="dashboard-container">
+            <div class="dash-header">
+                <h3>Live Operations</h3>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <span style="display: block; width: 8px; height: 8px; background: var(--status-ok); border-radius: 50%;"></span>
+                    <span style="font-size: 14px; font-weight: 600; color: var(--text-muted);">Connected to ClickHouse Cloud</span>
+                </div>
+            </div>
+
+            <div class="dash-grid">
+                <!-- Sidebar: Agent Simulator -->
+                <div class="dash-sidebar">
+                    <div class="control-group">
+                        <h4>Autonomous Agent Simulator</h4>
+                        
+                        <button class="agent-btn" onclick="submitJob('8K Final Pass', 7200, 0.58)">
+                            <span class="agent-title">Agent VFX_09 // 8K Final</span>
+                            <span class="agent-cost">Projected: $4,176.00</span>
+                        </button>
+
+                        <button class="agent-btn" onclick="submitJob('4K Plate Pass', 1200, 0.15)">
+                            <span class="agent-title">Agent LGT_02 // 4K Plates</span>
+                            <span class="agent-cost">Projected: $180.00</span>
+                        </button>
+                        
+                        <button class="agent-btn" onclick="submitJob('Smoke Sim', 450, 0.08)">
+                            <span class="agent-title">Agent FX_04 // Smoke Sim</span>
+                            <span class="agent-cost">Projected: $36.00</span>
+                        </button>
+                    </div>
+
+                    <div id="remediation-box" style="display:none; padding: 16px; background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 8px;">
+                        <h4 style="color: #92400E; margin-bottom: 8px;">Gemini AI Remediation</h4>
+                        <p id="remediation-text" style="font-size: 13px; color: #92400E;"></p>
+                    </div>
+                </div>
+
+                <!-- Main: Telemetry & Ledger -->
+                <div class="dash-main">
+                    
+                    <div class="telemetry">
+                        <div class="metric-card">
+                            <div class="metric-label">1-Hour Rolling Burn</div>
+                            <div class="metric-value font-mono" id="val-burn">$0.00</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Hard Budget Cap</div>
+                            <div class="metric-value font-mono" id="val-cap">$500.00</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Available Headroom</div>
+                            <div class="metric-value font-mono" id="val-headroom">$500.00</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Processed Jobs</div>
+                            <div class="metric-value font-mono" id="val-jobs">0</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style="margin-bottom: 16px; font-size: 16px;">Cryptographic Audit Ledger</h4>
+                        <div class="ledger-feed">
+                            <div id="ledger-rows">
+                                <!-- JS inserts rows here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Banner -->
+            <div class="verify-banner">
+                <div>
+                    <h4 style="color: #fff; margin-bottom: 4px;">Cryptographic Verification</h4>
+                    <p style="color: #94A3B8; font-size: 14px;">Walk the SHA-256 hash chain to guarantee zero-tampering.</p>
+                </div>
+                <button class="btn btn-primary" style="background: #fff; color: var(--brand-dark);" onclick="verifyChain()">Verify Ledger Chain</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- External Script for UI Logic -->
+    <script src="/static/ink.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inkBg = document.getElementById('ink-container');
+            if (inkBg && typeof InkFlowField !== 'undefined') {
+                new InkFlowField(inkBg, {
+                    colors: ["#E0E7FF", "#C7D2FE", "#818CF8", "#4F46E5", "#3730A3"]
+                });
+            }
+            refreshBurnData();
+            loadLedgerFeed();
+        });
+
+        async function refreshBurnData() {
+            try {
+                const r = await fetch('/api/rolling-burn');
+                const data = await r.json();
+                document.getElementById('val-burn').innerText = '$' + data.rolling_burn_usd.toFixed(2);
+                document.getElementById('val-cap').innerText = '$' + data.policy_threshold_usd.toFixed(2);
+                document.getElementById('val-headroom').innerText = '$' + Math.max(0, data.policy_threshold_usd - data.rolling_burn_usd).toFixed(2);
+                document.getElementById('val-jobs').innerText = data.total_jobs;
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadLedgerFeed() {
+            try {
+                const r = await fetch('/api/ledger');
+                const data = await r.json();
+                const container = document.getElementById('ledger-rows');
+                container.innerHTML = '';
+                
+                data.entries.slice(0, 10).forEach(entry => {
+                    const el = document.createElement('div');
+                    el.className = 'ledger-row font-mono';
+                    const isApproved = entry.verdict === 'APPROVED';
+                    el.innerHTML = `
+                        <div class="badge ${isApproved ? 'approved' : 'blocked'}">${entry.verdict}</div>
+                        <div style="font-size: 13px;">${entry.target_job}</div>
+                        <div class="hash-id">${entry.entry_hash}</div>
+                        <div style="text-align: right; font-weight: 700;">$${entry.rolling_burn_usd.toFixed(2)}</div>
+                    `;
+                    container.appendChild(el);
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        async function submitJob(jobName, duration, rate) {
+            try {
+                const r = await fetch('/api/submit-job', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ target_job: jobName, duration_sec: duration, gpu_cost_per_sec: rate })
+                });
+                const data = await r.json();
+                
+                if (data.remedy_suggestion) {
+                    document.getElementById('remediation-box').style.display = 'block';
+                    document.getElementById('remediation-text').innerText = data.remedy_suggestion;
+                } else {
+                    document.getElementById('remediation-box').style.display = 'none';
+                }
+                
+                refreshBurnData();
+                loadLedgerFeed();
+            } catch (e) { console.error(e); }
+        }
+
+        async function verifyChain() {
+            try {
+                const r = await fetch('/api/verify-chain');
+                const data = await r.json();
+                if (data.is_valid) {
+                    alert(`✅ Chain Verified!\nValidated ${data.total_entries} contiguous cryptographic blocks.`);
+                } else {
+                    alert(`❌ Chain Corrupted!\nError: ${data.error}`);
+                }
+            } catch (e) { console.error(e); }
+        }
+    </script>
+</body>
+</html>
