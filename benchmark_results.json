@@ -1,0 +1,42 @@
+{
+  "timestamp_utc": "2026-09-02T11:21:26Z",
+  "cluster_host": "y5eg99rbdt.europe-west4.gcp.clickhouse.cloud",
+  "telemetry_aggregation_50k_rows": {
+    "iterations": 10,
+    "latencies_ms": [
+      202.32,
+      202.06,
+      892.8,
+      236.91,
+      202.66,
+      206.42,
+      208.09,
+      184.67,
+      220.55,
+      209.47
+    ],
+    "min_ms": 184.67,
+    "max_ms": 892.8,
+    "median_ms": 207.25,
+    "mean_ms": 276.59
+  },
+  "ledger_chain_verification": {
+    "iterations": 10,
+    "latencies_ms": [
+      203.71,
+      204.47,
+      185.78,
+      182.73,
+      252.2,
+      172.14,
+      183.98,
+      172.89,
+      190.35,
+      183.3
+    ],
+    "min_ms": 172.14,
+    "max_ms": 252.2,
+    "median_ms": 184.88,
+    "mean_ms": 193.16
+  }
+}
