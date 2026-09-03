@@ -208,5 +208,11 @@ async def index():
         return f.read()
 
 
+@app.get("/console", response_class=HTMLResponse)
+async def console():
+    with open("templates/console.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8080)
