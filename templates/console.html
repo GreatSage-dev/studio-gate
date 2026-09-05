@@ -1808,7 +1808,7 @@
                 <!-- Verification Banner -->
                 <div id="verification-banner" class="verification-banner">
                     <div class="vb-left">
-                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <svg id="vb-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                         <span id="vb-text">Cryptographic Chain Verified: 0 Tampered Blocks</span>
                     </div>
                     <button onclick="document.getElementById('verification-banner').style.display='none'" style="background:transparent; border:none; color:inherit; cursor:pointer;">✕</button>
@@ -2082,6 +2082,7 @@
         async function verifyChain(simulateTamper = false) {
             const banner = document.getElementById('verification-banner');
             const text = document.getElementById('vb-text');
+            const icon = document.getElementById('vb-icon');
             try {
                 const url = simulateTamper ? '/api/verify-chain?tamper=true' : '/api/verify-chain';
                 const r = await fetch(url);
@@ -2090,10 +2091,12 @@
 
                 if (d.is_valid) {
                     banner.className = 'verification-banner';
+                    if (icon) icon.innerHTML = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>';
                     text.innerText = `Cryptographic Chain Verified: Validated ${d.total_entries} contiguous SHA-256 blocks with zero tampering.`;
                 } else {
                     banner.className = 'verification-banner error';
-                    text.innerText = `Chain Compromised! SHA-256 Mismatch: ${d.error}`;
+                    if (icon) icon.innerHTML = '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>';
+                    text.innerText = `Chain Compromised! Mathematical Mismatch: ${d.error}`;
                 }
             } catch (e) {
                 console.error('Verify error:', e);

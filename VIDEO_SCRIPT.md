@@ -61,34 +61,38 @@
 
 ---
 
-## 🎬 Shot 4: The Immutable Ledger & The Killer Falsifiability Test (1:45 – 2:35)
+## 🎬 Shot 4: The 30-Second Falsifiability Moment (1:45 – 2:25)
 
 ### 🖥️ Visual Action:
 1. Click the **Immutable Cryptographic Ledger** tab (`#ledger`).
-2. Scroll through the ledger items showing the timestamp, target task, SHA-256 hash, and status badges.
-3. Click **"Verify Cryptographic Chain"**.
-   - The top banner flashes bright green: *"Cryptographic Chain Verified: Validated 70 contiguous SHA-256 blocks with zero tampering."*
-4. **THE FALSIFIABILITY TEST:**
-   - Now click **"Simulate Tamper"**.
-   - The top banner instantly turns crimson red:
-     *"Chain Compromised! SHA-256 Mismatch: Hash mismatch at row 69 ... stored entry_hash does not match computed."*
+2. Point cursor to the chronological audit records: timestamp, Hollywood shot task, SHA-256 block hash, and status badge.
+3. Click **"Verify Cryptographic Chain"** (button top right).
+   - The top banner flashes bright green with the verified shield icon:
+     *"Cryptographic Chain Verified: Validated contiguous SHA-256 blocks with zero tampering."*
+4. **THE FALSIFIABILITY MOMENT (Show it live):**
+   - Click **"Simulate Tamper"**.
+   - The banner instantly snaps to crimson red with a hazard warning icon:
+     *"Chain Compromised! Mathematical Mismatch: Hash mismatch at row ... stored entry_hash does not match computed."*
+   - Let the red warning stay on screen for 2 full seconds.
 5. Click **"Verify Cryptographic Chain"** again.
-   - The banner restores to bright green.
+   - The banner instantly snaps back to bright green with the checkmark shield.
 
-### 🎙️ Voiceover:
-> "Every decision—approved or blocked—is logged to ClickHouse Cloud in a strict SHA-256 cryptographic hash-chain.
+### 🎙️ Voiceover (Speak clearly and deliberately):
+> "Every decision—approved or blocked—is committed to ClickHouse Cloud in a strict SHA-256 cryptographic hash-chain.
 >
-> But here is StudioGate's sharpest principle: **build a verifier that can disagree with you.**
+> But here is what makes this trustworthy: **a verifier that can disagree with you.**
 >
-> If I tamper with any entry in this ledger, the verification breaks. Watch.
+> If anyone tampers with a single character in this ledger, the mathematics breaks. Watch.
 >
-> *(Click 'Simulate Tamper')*
+> *(Click 'Simulate Tamper' — Crimson banner flashes)*
 >
-> I simulate an unauthorized change of just one character in the ledger. The independent verifier recalculates the chain walk and immediately detects the mathematical mismatch.
+> A single-byte unauthorized change. The independent verifier walks the chain and immediately flags the mathematical mismatch.
 >
-> *(Click 'Verify Cryptographic Chain')*
+> Gemini cannot rewrite this. No one can.
 >
-> Restore it, and the cryptographic chain is validated with zero tampering."
+> *(Click 'Verify Cryptographic Chain' — Green banner restores)*
+>
+> Restore the authentic state, and the entire chain passes verification."
 
 ---
 
