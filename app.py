@@ -52,6 +52,16 @@ app = FastAPI(title="StudioGate", description="Mission Control Governance Consol
 if os.path.exists(STATIC_DIR):
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
+
+@app.middleware("http")
+async def vercel_path_rewrite_middleware(request: Request, call_next):
+    for prefix in ["/api/index.py", "/api/index"]:
+        if request.scope.get("path", "").startswith(prefix):
+            new_path = request.scope["path"][len(prefix):]
+            request.scope["path"] = new_path if new_path.startswith("/") else ("/" + new_path)
+            break
+    return await call_next(request)
+
 if IMPORT_ERROR:
     @app.get("/{full_path:path}", response_class=HTMLResponse)
     async def import_error_view(full_path: str):
@@ -326,6 +336,8 @@ async def verify_chain_endpoint(tamper: bool = False):
 # ---------------------------------------------------------------------------
 
 @app.get("/", response_class=HTMLResponse)
+@app.get("/api/index.py", response_class=HTMLResponse)
+@app.get("/api/index", response_class=HTMLResponse)
 async def index():
     file_path = os.path.join(TEMPLATES_DIR, "index.html")
     with open(file_path, "r", encoding="utf-8") as f:
@@ -333,6 +345,8 @@ async def index():
 
 
 @app.get("/console", response_class=HTMLResponse)
+@app.get("/api/index.py/console", response_class=HTMLResponse)
+@app.get("/api/index/console", response_class=HTMLResponse)
 async def console():
     file_path = os.path.join(TEMPLATES_DIR, "console.html")
     with open(file_path, "r", encoding="utf-8") as f:
