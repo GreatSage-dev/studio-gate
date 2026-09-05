@@ -55,11 +55,21 @@ if os.path.exists(STATIC_DIR):
 
 @app.middleware("http")
 async def vercel_path_rewrite_middleware(request: Request, call_next):
-    for prefix in ["/api/index.py", "/api/index"]:
-        if request.scope.get("path", "").startswith(prefix):
-            new_path = request.scope["path"][len(prefix):]
-            request.scope["path"] = new_path if new_path.startswith("/") else ("/" + new_path)
-            break
+    route_param = request.query_params.get("__route__")
+    matched_header = request.headers.get("x-matched-path") or request.headers.get("x-invoke-path")
+    target = route_param or matched_header
+
+    if target:
+        clean = target.split("?")[0]
+        if not clean.startswith("/"):
+            clean = "/" + clean
+        request.scope["path"] = clean
+    else:
+        for prefix in ["/api/index.py", "/api/index"]:
+            if request.scope.get("path", "").startswith(prefix):
+                new_path = request.scope["path"][len(prefix):]
+                request.scope["path"] = new_path if new_path.startswith("/") else ("/" + new_path)
+                break
     return await call_next(request)
 
 if IMPORT_ERROR:
