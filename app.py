@@ -24,8 +24,9 @@ from fastapi.staticfiles import StaticFiles
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
-STATIC_DIR = os.path.join(BASE_DIR, "static")
+possible_dirs = [BASE_DIR, os.getcwd(), os.path.dirname(BASE_DIR)]
+TEMPLATES_DIR = next((os.path.join(d, "templates") for d in possible_dirs if os.path.exists(os.path.join(d, "templates"))), os.path.join(BASE_DIR, "templates"))
+STATIC_DIR = next((os.path.join(d, "static") for d in possible_dirs if os.path.exists(os.path.join(d, "static"))), os.path.join(BASE_DIR, "static"))
 
 HARD_BUDGET_CAP = float(os.getenv("HARD_BUDGET_CAP_USD", "500.0"))
 
@@ -38,13 +39,13 @@ if os.path.exists(STATIC_DIR):
 async def startup():
     """Ensure ClickHouse governance table exists on startup and start telemetry daemon."""
     try:
-        clickhouse_client.create_governance_ledger_table()
-        # Only launch background daemon in continuous environments, not serverless lambdas
+        # Only execute background streaming & table creation in persistent servers, not serverless lambdas
         if os.getenv("VERCEL") != "1" and not os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+            clickhouse_client.create_governance_ledger_table()
             daemon.start()
             print("Live ClickHouse telemetry daemon started!")
         else:
-            print("Serverless runtime detected: skipping background streaming thread.")
+            print("Serverless runtime detected: skipping background streaming thread and startup table check.")
     except Exception as e:
         print(f"Warning on startup: {e}")
 
