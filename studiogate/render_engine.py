@@ -67,13 +67,7 @@ def render_blocked_workload(job_name: str = "VFX_09 // 8K Volumetric Final Pass"
     img_array = _procedural_volumetric_field(w, h, steps=32, seed=101)
     img = Image.fromarray(img_array)
 
-    draw = ImageDraw.Draw(img)
-    # Visual banner stamp: BLOCKED RUNAWAY PASS
-    draw.rectangle([0, h - 38, w, h], fill=(14, 11, 26))
-    draw.rectangle([0, h - 38, 120, h], fill=(244, 63, 94))
-    draw.text((14, h - 28), "BLOCKED (CAP $500)", fill=(255, 255, 255))
-    draw.text((135, h - 28), f"TARGET: {job_name} | ESTIMATED RUNTIME: 7,200s", fill=(200, 200, 210))
-
+    # Generate clean volumetric render frame (CSS overlay stamp handles typography cleanly)
     out_file = os.path.join(OUTPUT_DIR, "vfx_09_blocked_pass.png")
     try:
         img.save(out_file, "PNG", optimize=True)
@@ -105,13 +99,7 @@ def render_compliant_proxy(alternative_name: str = "4K Proxy Pass on Spot Instan
     img_array = _procedural_volumetric_field(w, h, steps=18, seed=202)
     img = Image.fromarray(img_array)
 
-    draw = ImageDraw.Draw(img)
-    # Visual banner stamp: GEMINI COMPLIANT PROXY
-    draw.rectangle([0, h - 38, w, h], fill=(14, 11, 26))
-    draw.rectangle([0, h - 38, 130, h], fill=(45, 212, 191))
-    draw.text((12, h - 28), "GEMINI COMPLIANT", fill=(8, 8, 15))
-    draw.text((145, h - 28), f"DISPATCHED: {alternative_name} | COST: $180.00", fill=(220, 255, 240))
-
+    # Generate clean volumetric render frame (CSS overlay stamp handles typography cleanly)
     out_file = os.path.join(OUTPUT_DIR, "gemini_remedy_proxy.png")
     try:
         img.save(out_file, "PNG", optimize=True)
