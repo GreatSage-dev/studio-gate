@@ -75,3 +75,7 @@ dmypy.json
 .pyre/
 .pytype/
 .ruff_cache/
+
+# Video script
+VIDEO_SCRIPT.md
+*video_script*
