@@ -4,6 +4,7 @@ Wraps all database operations: rolling-burn aggregation,
 governance ledger CRUD, and chain verification queries.
 All credentials are loaded from environment variables.
 """
+import math
 import os
 import uuid
 from datetime import datetime, timezone
@@ -28,15 +29,15 @@ def get_client() -> clickhouse_connect.driver.Client:
     password = os.getenv("CLICKHOUSE_PASSWORD")
 
     if not host or not password:
-        raise ValueError("Missing CLICKHOUSE_HOST or CLICKHOUSE_PASSWORD in environment.")
+        raise ValueError("CLICKHOUSE_HOST and CLICKHOUSE_PASSWORD must be set in .env")
 
     return clickhouse_connect.get_client(
         host=host,
         port=int(os.getenv("CLICKHOUSE_PORT", "8443")),
         username=os.getenv("CLICKHOUSE_USER", "default"),
         password=password,
-        database=os.getenv("CLICKHOUSE_DATABASE", "default"),
-        secure=os.getenv("CLICKHOUSE_SECURE", "true").lower() == "true",
+        secure=True,
+        connect_timeout=30,
         send_receive_timeout=30,
     )
 
@@ -56,10 +57,20 @@ def get_rolling_burn(client: Optional[clickhouse_connect.driver.Client] = None) 
     """)
 
     row = result.result_rows[0]
+
+    def _clean_float(val, default=0.0):
+        if val is None:
+            return default
+        try:
+            f = float(val)
+            return default if math.isnan(f) or math.isinf(f) else f
+        except (ValueError, TypeError):
+            return default
+
     return {
-        "rolling_burn_usd": float(row[0]) if row[0] is not None else 0.0,
-        "avg_power_kw": float(row[1]) if row[1] is not None else 0.0,
-        "total_samples": int(row[2]),
+        "rolling_burn_usd": _clean_float(row[0]),
+        "avg_power_kw": _clean_float(row[1]),
+        "total_samples": int(row[2]) if row[2] is not None else 0,
     }
 
 

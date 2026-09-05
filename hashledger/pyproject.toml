@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hashledger"
+version = "0.1.0"
+description = "Lightweight, zero-dependency SHA-256 cryptographic hash-chaining library for immutable audit ledgers and governance logging."
+readme = "README.md"
+authors = [{ name = "StudioGate Architecture Team", email = "dev@studiogate.io" }]
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Database",
+]
+keywords = ["cryptography", "audit-trail", "sha256", "blockchain", "immutable-ledger", "governance"]
+requires-python = ">=3.10"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/GreatSage-dev/studio-gate"
+Repository = "https://github.com/GreatSage-dev/studio-gate/tree/main/hashledger"

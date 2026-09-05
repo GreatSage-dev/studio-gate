@@ -23,7 +23,9 @@ client = clickhouse_connect.get_client(
     username=user,
     password=password,
     database=database,
-    secure=secure
+    secure=secure,
+    connect_timeout=30,
+    send_receive_timeout=60,
 )
 
 # 2. Schema with explicit duration_sec column
@@ -77,12 +79,25 @@ for _ in range(NUM_ROWS):
 print(f"Data spans from {rows[0][5]} to {rows[-1][5]}")
 print(f"Last row timestamp vs now: {(datetime.now(timezone.utc) - rows[-1][5]).total_seconds():.1f} seconds ago")
 
-# 4. Streamed insert
-client.insert(
-    'render_telemetry',
-    rows,
-    column_names=['node_id', 'job_type', 'duration_sec', 'gpu_cost_per_sec', 'power_draw_kw', 'timestamp']
-)
+# 4. Streamed insert in batches of 10,000 to avoid HTTP socket timeout
+batch_size = 10000
+for i in range(0, len(rows), batch_size):
+    batch = rows[i:i + batch_size]
+    for attempt in range(3):
+        try:
+            client.insert(
+                'render_telemetry',
+                batch,
+                column_names=['node_id', 'job_type', 'duration_sec', 'gpu_cost_per_sec', 'power_draw_kw', 'timestamp']
+            )
+            print(f"Inserted batch {i // batch_size + 1}/{(len(rows) + batch_size - 1) // batch_size} ({len(batch)} rows)...")
+            break
+        except Exception as e:
+            if attempt < 2:
+                print(f"Batch insert attempt {attempt+1} failed ({e}), retrying in 2s...")
+                import time; time.sleep(2)
+            else:
+                raise
 
 print(f"Successfully inserted {len(rows)} telemetry rows into ClickHouse.")
 

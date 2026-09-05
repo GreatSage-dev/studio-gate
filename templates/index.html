@@ -93,44 +93,129 @@
             min-height: 100vh;
         }
 
-        /* Purple/blue glow dome — positioned center-top, radiating upward like reference */
-        .hero-glow {
+        /* Large architectural brick-style pattern in header background (180px x 64px running-bond bricks) */
+        .hero-grid {
             position: absolute;
-            bottom: 15%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 900px;
-            height: 500px;
-            background: url('/static/header_bg.png') no-repeat center center;
-            background-size: cover;
-            opacity: 0.55;
+            inset: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            mask-image: radial-gradient(ellipse 100% 100% at 50% 100%, black 0%, transparent 72%);
-            -webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 100%, black 0%, transparent 72%);
+            z-index: 1;
+            background-size: 180px 128px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='128' fill='none'%3E%3Cpath d='M0 0.5h180M0 64.5h180M0.5 0v64M90.5 64v64' stroke='white' stroke-opacity='0.025' stroke-width='1'/%3E%3C/svg%3E");
+            background-position: center top;
+            mask-image: radial-gradient(ellipse 85% 65% at 50% 40%, #000 20%, rgba(0, 0, 0, 0.4) 60%, transparent 90%);
+            -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 40%, #000 20%, rgba(0, 0, 0, 0.4) 60%, transparent 90%);
         }
 
-        /* Vertical light streaks */
-        .hero-streaks {
+        /* Interactive Neon Brick Grid Canvas */
+        .hero-brick-canvas {
             position: absolute;
-            top: 0; left: 50%; transform: translateX(-50%);
-            width: 500px; height: 420px;
+            inset: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            opacity: 0.12;
-            background: repeating-linear-gradient(
-                90deg,
-                transparent 0px,
-                transparent 14px,
-                rgba(91, 134, 182, 0.6) 14px,
-                rgba(91, 134, 182, 0.6) 16px,
-                transparent 16px,
-                transparent 30px,
-                rgba(128, 170, 211, 0.4) 30px,
-                rgba(128, 170, 211, 0.4) 31px,
-                transparent 31px,
-                transparent 50px
+            z-index: 2;
+        }
+
+        /* Architectural fluted pillars disabled to preserve clean brick pattern geometry */
+        .hero-streaks {
+            display: none;
+        }
+
+        /* Full-width horizontal neon horizon band touching both left and right ends */
+        .hero-glow-band {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 780px;
+            pointer-events: none;
+            z-index: 1;
+            /* Sampled exact reference gradient: #9734e4 to #d0a8fe to #9e44e5 across 100% width */
+            background: 
+                /* Luminous bottom neon beam */
+                linear-gradient(90deg, 
+                    #9734e4 0%, 
+                    #a852ec 12%, 
+                    #bd76f5 28%, 
+                    #d8aeff 45%, 
+                    #e9cfff 50%, 
+                    #d8aeff 55%, 
+                    #bd76f5 72%, 
+                    #a852ec 88%, 
+                    #9e44e5 100%
+                ),
+                /* Radiant vertical spread into the cards */
+                radial-gradient(ellipse 130% 90% at 50% 100%, 
+                    rgba(235, 205, 255, 0.7) 0%, 
+                    rgba(195, 130, 250, 0.85) 25%, 
+                    rgba(151, 52, 228, 0.9) 55%, 
+                    rgba(100, 20, 160, 0.85) 80%, 
+                    rgba(151, 52, 228, 0.8) 100%
+                );
+            background-blend-mode: screen;
+            opacity: 0.95;
+            mask-image: linear-gradient(
+                180deg,
+                transparent 0%,
+                transparent 25%,
+                rgba(0, 0, 0, 0.02) 38%,
+                rgba(0, 0, 0, 0.08) 50%,
+                rgba(0, 0, 0, 0.25) 65%,
+                rgba(0, 0, 0, 0.6) 80%,
+                rgba(0, 0, 0, 0.9) 92%,
+                #000000 100%
             );
-            mask-image: linear-gradient(180deg, black 0%, transparent 100%);
-            -webkit-mask-image: linear-gradient(180deg, black 0%, transparent 100%);
+            -webkit-mask-image: linear-gradient(
+                180deg,
+                transparent 0%,
+                transparent 25%,
+                rgba(0, 0, 0, 0.02) 38%,
+                rgba(0, 0, 0, 0.08) 50%,
+                rgba(0, 0, 0, 0.25) 65%,
+                rgba(0, 0, 0, 0.6) 80%,
+                rgba(0, 0, 0, 0.9) 92%,
+                #000000 100%
+            );
+        }
+
+        /* Expansive upward ambient purple arch */
+        .hero-glow-arch {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 820px;
+            pointer-events: none;
+            z-index: 1;
+            background: 
+                radial-gradient(ellipse 85% 75% at 50% 95%, rgba(208, 168, 254, 0.6) 0%, rgba(161, 72, 232, 0.55) 35%, rgba(100, 20, 170, 0.4) 65%, transparent 95%),
+                url('/static/header_bg.png') no-repeat center bottom / contain;
+            opacity: 0.85;
+            mix-blend-mode: screen;
+            mask-image: linear-gradient(
+                180deg,
+                transparent 0%,
+                transparent 25%,
+                rgba(0, 0, 0, 0.03) 38%,
+                rgba(0, 0, 0, 0.15) 52%,
+                rgba(0, 0, 0, 0.5) 70%,
+                rgba(0, 0, 0, 0.85) 88%,
+                #000000 100%
+            );
+            -webkit-mask-image: linear-gradient(
+                180deg,
+                transparent 0%,
+                transparent 25%,
+                rgba(0, 0, 0, 0.03) 38%,
+                rgba(0, 0, 0, 0.15) 52%,
+                rgba(0, 0, 0, 0.5) 70%,
+                rgba(0, 0, 0, 0.85) 88%,
+                #000000 100%
+            );
         }
 
         /* Side glow orbs — subtle ambient light like reference corners */
@@ -139,7 +224,7 @@
             position: absolute;
             top: 20%; left: -5%;
             width: 300px; height: 400px;
-            background: radial-gradient(circle, rgba(91, 134, 182, 0.06) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(161, 72, 232, 0.15) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -222,9 +307,10 @@
         /* ─── Hero Floating Cards ─── */
         .hero-cards {
             position: relative;
-            max-width: 740px;
+            max-width: 820px;
             margin: 0 auto;
-            height: 310px;
+            height: 380px;
+            z-index: 4;
         }
         @media (max-width: 768px) { .hero-cards { display: none; } }
 
@@ -374,21 +460,14 @@
         .fi-right { right: -4%; top: 20%; }
         .fi-right svg { stroke: var(--c2); }
 
-        /* ─── Divider gradient line ─── */
-        .hero-fade {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 200px;
-            background: linear-gradient(180deg, transparent 0%, #08080f 100%);
-            pointer-events: none;
-            z-index: 5;
-        }
-
         /* ─────────── PARTNERS ─────────── */
         .partners {
             padding: 56px 24px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: #08080f;
+            position: relative;
+            z-index: 10;
         }
         .partners-title {
             font-size: 13px; font-weight: 500;
@@ -504,73 +583,371 @@
             margin-top: 12px;
         }
 
-        /* ─────────── FEATURES ─────────── */
+        /* ─────────── FEATURES (5-CARD BENTO GRID) ─────────── */
         .features {
-            padding: 120px 24px;
+            padding: 130px 24px;
             text-align: center;
             border-top: 1px solid rgba(255,255,255,0.04);
+            position: relative;
         }
-        .f-eyebrow {
-            display: inline-flex; align-items: center; gap: 6px;
+        .f-eyebrow-pill {
+            display: inline-flex; align-items: center; gap: 8px;
             font-family: 'Space Grotesk', sans-serif;
             font-size: 11px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.1em;
-            color: var(--c3);
-            margin-bottom: 20px;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: #d0a8fe;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            padding: 6px 18px; border-radius: 999px;
+            margin-bottom: 24px;
         }
-        .f-eyebrow::before { content: '+'; }
+        .f-eyebrow-pill svg { width: 13px; height: 13px; stroke: #d0a8fe; fill: none; stroke-width: 2; }
         .features h2 {
             font-family: 'Outfit', sans-serif;
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-size: clamp(2.2rem, 4.5vw, 3.3rem);
             font-weight: 700;
             letter-spacing: -0.035em;
             color: #fff;
-            margin-bottom: 60px;
-            line-height: 1.15;
+            margin-bottom: 16px;
+            line-height: 1.12;
         }
-        .features h2 .acc { color: var(--c3); }
+        .features h2 .acc {
+            background: linear-gradient(90deg, #ffffff 0%, #d0a8fe 50%, #bd76f5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .features-sub {
+            font-size: 14.5px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.4);
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
 
-        .feat-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 16px;
-            overflow: hidden;
-            max-width: 1060px; margin: 0 auto;
+        /* Bento Container */
+        .bento-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
             text-align: left;
         }
-        @media (max-width: 860px) { .feat-grid { grid-template-columns: 1fr; } }
+        .bento-row-top {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+        .bento-row-bottom {
+            display: grid;
+            grid-template-columns: 5fr 7fr;
+            gap: 22px;
+        }
+        @media (max-width: 960px) {
+            .bento-row-top,
+            .bento-row-bottom {
+                grid-template-columns: 1fr;
+            }
+        }
 
-        .feat-item {
-            background: #08080f;
-            padding: 44px 36px;
-            transition: background 0.3s;
+        /* Bento Card Base */
+        .b-card {
+            position: relative;
+            background: rgba(14, 11, 26, 0.75);
+            border: 1px solid rgba(168, 85, 247, 0.18);
+            border-radius: 24px;
+            overflow: hidden;
+            padding: 32px 28px 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 390px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .feat-item:hover { background: #0d0d18; }
-        .feat-icon {
-            width: 36px; height: 36px;
-            margin-bottom: 22px; color: var(--c2);
+        .b-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(192, 132, 252, 0.35);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65), 0 0 35px rgba(168, 85, 247, 0.18);
         }
-        .feat-icon svg { width: 36px; height: 36px; stroke: currentColor; stroke-width: 1; fill: none; }
-        .feat-item h3 {
+        .b-card-head {
+            position: relative;
+            z-index: 4;
+        }
+        .b-card-head h3 {
             font-family: 'Outfit', sans-serif;
-            font-size: 17px; font-weight: 600;
-            color: #fff; margin-bottom: 10px;
-            letter-spacing: -0.01em;
+            font-size: 19px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.015em;
+            margin-bottom: 8px;
         }
-        .feat-item p {
-            font-size: 13.5px; line-height: 1.65;
-            color: rgba(255,255,255,0.35);
+        .b-card-head p {
+            font-size: 13px;
+            line-height: 1.55;
+            color: rgba(255, 255, 255, 0.42);
+            max-width: 320px;
         }
-        .feat-tag {
-            display: inline-block; margin-top: 16px;
+        .b-card-stage {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            width: 100%;
+            z-index: 3;
+        }
+
+        /* ─── Internal Card Glows ─── */
+        /* Radiant Feathered Horizon Flare for Top Cards (Zero Hard Cuts) */
+        .card-horizon-glow {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            background: 
+                /* 1. Luminous white-hot center core along the bottom rim */
+                radial-gradient(ellipse 55% 20% at 50% 100%, rgba(255, 255, 255, 0.95) 0%, rgba(245, 208, 254, 0.8) 25%, rgba(192, 132, 252, 0.45) 55%, transparent 80%),
+                /* 2. Vibrant horizontal neon light wave */
+                radial-gradient(ellipse 110% 28% at 50% 100%, rgba(235, 195, 255, 0.65) 0%, rgba(192, 132, 252, 0.45) 30%, rgba(147, 51, 234, 0.22) 60%, transparent 85%),
+                /* 3. Deep upward ambient purple atmospheric swell */
+                radial-gradient(ellipse 95% 75% at 50% 100%, rgba(168, 85, 247, 0.35) 0%, rgba(147, 51, 234, 0.18) 40%, rgba(88, 28, 135, 0.05) 70%, transparent 95%);
+            background-blend-mode: screen;
+            mask-image: linear-gradient(
+                180deg,
+                transparent 0%,
+                transparent 15%,
+                rgba(0, 0, 0, 0.03) 30%,
+                rgba(0, 0, 0, 0.15) 50%,
+                rgba(0, 0, 0, 0.55) 75%,
+                #000000 100%
+            );
+            -webkit-mask-image: linear-gradient(
+                180deg,
+                transparent 0%,
+                transparent 15%,
+                rgba(0, 0, 0, 0.03) 30%,
+                rgba(0, 0, 0, 0.15) 50%,
+                rgba(0, 0, 0, 0.55) 75%,
+                #000000 100%
+            );
+        }
+
+        /* Right plume for Card 4 — softly feathered */
+        .card-right-plume {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(ellipse 75% 65% at 100% 45%, rgba(216, 174, 255, 0.3) 0%, rgba(168, 85, 247, 0.18) 35%, rgba(126, 34, 206, 0.05) 65%, transparent 95%);
+            mix-blend-mode: screen;
+            mask-image: radial-gradient(ellipse 85% 75% at 100% 45%, #000 15%, rgba(0,0,0,0.3) 55%, transparent 90%);
+            -webkit-mask-image: radial-gradient(ellipse 85% 75% at 100% 45%, #000 15%, rgba(0,0,0,0.3) 55%, transparent 90%);
+        }
+
+        /* Floor wash for Card 5 — smoothly diffused */
+        .card-chart-glow {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(168, 85, 247, 0.2) 0%, rgba(126, 34, 206, 0.08) 45%, transparent 85%);
+            mask-image: linear-gradient(180deg, transparent 0%, transparent 25%, rgba(0,0,0,0.2) 60%, #000 100%);
+            -webkit-mask-image: linear-gradient(180deg, transparent 0%, transparent 25%, rgba(0,0,0,0.2) 60%, #000 100%);
+        }
+
+        /* ─── Card 1: 3D Glowing Bars ─── */
+        .stage-pill {
+            position: absolute;
+            top: 10px; left: 50%;
+            transform: translateX(-50%);
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border-radius: 999px;
+            padding: 5px 14px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px; font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            z-index: 4;
+        }
+        .stage-pill svg { width: 12px; height: 12px; stroke: #d0a8fe; fill: none; }
+        .b-bars {
+            display: flex; align-items: flex-end; gap: 11px;
+            height: 170px;
+            position: relative; z-index: 2;
+        }
+        .b-bar {
+            width: 17px;
+            border-radius: 12px 12px 0 0;
+            background: rgba(147, 51, 234, 0.22);
+            border: 1px solid rgba(192, 132, 252, 0.22);
+            border-bottom: none;
+            position: relative;
+        }
+        .b-bar.highlight {
+            background: linear-gradient(180deg, #ffffff 0%, #f0abfc 45%, #c084fc 100%);
+            box-shadow: 0 0 24px rgba(240, 171, 252, 0.75), 0 0 50px rgba(168, 85, 247, 0.4);
+            border: 1px solid #ffffff;
+            border-bottom: none;
+            z-index: 3;
+        }
+
+        /* ─── Card 2: Stacked Capsules ─── */
+        .b-capsule-stack {
+            display: flex; flex-direction: column; gap: 9px;
+            width: 100%; max-width: 275px;
+            padding-bottom: 22px;
+            position: relative; z-index: 2;
+        }
+        .b-capsule {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 16px; border-radius: 999px;
+            background: rgba(255, 255, 255, 0.045);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px; font-weight: 500;
+            color: rgba(255, 255, 255, 0.65);
+            transition: transform 0.2s, background 0.2s;
+        }
+        .b-capsule:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.02);
+        }
+        .b-capsule.active-bright {
+            background: rgba(192, 132, 252, 0.15);
+            border-color: rgba(245, 208, 254, 0.35);
+            color: #ffffff;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.2);
+        }
+        .b-capsule svg { width: 13px; height: 13px; stroke: #d0a8fe; fill: none; flex-shrink: 0; }
+
+        /* ─── Card 3: Orbit Constellation ─── */
+        .b-orbit-stage {
+            position: relative;
+            width: 100%; height: 195px;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2;
+        }
+        .orbit-ring {
+            position: absolute;
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            border: 1px dashed rgba(168, 85, 247, 0.25);
+            pointer-events: none;
+        }
+        .orbit-center-node {
+            width: 48px; height: 48px; border-radius: 14px;
+            background: linear-gradient(135deg, #7e22ce, #a855f7);
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 3;
+        }
+        .orbit-center-node svg { width: 22px; height: 22px; stroke: #fff; fill: none; }
+        .orbit-node {
+            position: absolute;
+            width: 36px; height: 36px; border-radius: 10px;
+            background: rgba(20, 15, 36, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 10px; font-weight: 700;
+            color: rgba(255, 255, 255, 0.8);
+            z-index: 3;
+            transition: transform 0.2s;
+        }
+        .orbit-node:hover { transform: scale(1.1); color: #fff; border-color: rgba(192, 132, 252, 0.4); }
+        .node-pos-1 { top: 10px; left: 32px; }
+        .node-pos-2 { top: 12px; right: 32px; }
+        .node-pos-3 { bottom: 22px; left: 24px; }
+        .node-pos-4 { bottom: 20px; right: 26px; }
+
+        /* ─── Card 4: Remedy Cards Stack ─── */
+        .b-tx-stack {
+            display: flex; flex-direction: column; gap: 12px;
+            width: 100%; max-width: 380px;
+            padding-bottom: 28px;
+            position: relative; z-index: 2;
+        }
+        .b-tx-card {
+            background: rgba(20, 15, 36, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex; align-items: center; justify-content: space-between;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+        .b-tx-info { display: flex; flex-direction: column; gap: 3px; }
+        .b-tx-title { font-family: 'Outfit', sans-serif; font-size: 13.5px; font-weight: 600; color: #fff; }
+        .b-tx-meta { font-size: 11px; color: rgba(255, 255, 255, 0.38); font-family: 'Space Grotesk', sans-serif; }
+        .b-tx-meta.breach { color: #f87171; }
+        .b-tx-meta.safe { color: #4ade80; }
+        .b-tx-badge {
+            padding: 6px 12px; border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 10.5px; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .b-tx-badge.blocked {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .b-tx-badge.approved {
+            background: rgba(16, 185, 129, 0.15);
+            color: #6ee7b7;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* ─── Card 5: Coordinate Audit Chart ─── */
+        .b-chart-stage {
+            position: relative;
+            width: 100%; height: 215px;
+            padding-bottom: 16px;
+            z-index: 2;
+        }
+        .b-chart-svg { width: 100%; height: 100%; overflow: visible; }
+        .b-chart-popover {
+            position: absolute;
+            top: 20px; left: 46%;
+            transform: translateX(-50%);
+            background: rgba(18, 13, 33, 0.92);
+            border: 1px solid rgba(192, 132, 252, 0.28);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 24px rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 10px 16px;
+            backdrop-filter: blur(14px);
+            z-index: 4;
+            display: flex; flex-direction: column; gap: 3px;
+            min-width: 210px;
+        }
+        .popover-date {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 10.5px; font-weight: 500;
-            color: rgba(255,255,255,0.2);
-            padding: 4px 10px; border-radius: 5px;
-            border: 1px solid rgba(255,255,255,0.06);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .popover-job { font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; color: #ffffff; }
+        .popover-hash { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: #c084fc; }
+        .popover-status {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 10px; font-weight: 600;
+            color: #4ade80; margin-top: 2px;
         }
 
         /* ─────────── FLOW ─────────── */
@@ -690,8 +1067,11 @@
 
     <!-- HERO -->
     <section class="hero">
+        <div class="hero-grid"></div>
+        <canvas id="hero-brick-canvas" class="hero-brick-canvas"></canvas>
         <div class="hero-streaks"></div>
-        <div class="hero-glow"></div>
+        <div class="hero-glow-arch"></div>
+        <div class="hero-glow-band"></div>
         <div class="hero-inner">
             <div class="eyebrow">
                 <span class="eyebrow-dot"></span>
@@ -777,7 +1157,6 @@
                 </div>
             </div>
         </div>
-        <div class="hero-fade"></div>
     </section>
 
     <!-- PARTNERS -->
@@ -848,34 +1227,195 @@
         </div>
     </section>
 
-    <!-- FEATURES -->
+    <!-- FEATURES (5-CARD BENTO GRID) -->
     <section id="features" class="features rv">
-        <div class="f-eyebrow">Capabilities</div>
-        <h2>StudioGate Can<br>Help You <span class="acc">with</span></h2>
-        <div class="feat-grid">
-            <div class="feat-item">
-                <div class="feat-icon">
-                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+        <div class="f-eyebrow-pill">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            Autonomous Pipeline Governance
+        </div>
+        <h2>
+            Discover the Guardrails That<br>
+            <span class="acc">Protect and Empower Media Pipelines</span>
+        </h2>
+        <p class="features-sub">
+            Everything your studio needs to monitor live GPU burn, eliminate runaway costs, and lock cryptographic audit trails — in real time.
+        </p>
+
+        <div class="bento-container">
+            <!-- TOP ROW: 3 EQUAL CARDS WITH BOTTOM HORIZON FLARE -->
+            <div class="bento-row-top">
+                <!-- CARD 1: REAL-TIME GPU TELEMETRY (3D BARS) -->
+                <div class="b-card">
+                    <div class="b-card-head">
+                        <h3>Real-Time GPU Telemetry</h3>
+                        <p>Sub-second rolling burn and power draw aggregated across 50,000+ ClickHouse events.</p>
+                    </div>
+                    <div class="b-card-stage">
+                        <div class="stage-pill">
+                            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                            ClickHouse Cloud · 50K Events
+                        </div>
+                        <div class="b-bars">
+                            <div class="b-bar" style="height: 48px;"></div>
+                            <div class="b-bar" style="height: 72px;"></div>
+                            <div class="b-bar" style="height: 95px;"></div>
+                            <div class="b-bar highlight" style="height: 155px;"></div>
+                            <div class="b-bar highlight" style="height: 120px;"></div>
+                            <div class="b-bar" style="height: 80px;"></div>
+                            <div class="b-bar" style="height: 52px;"></div>
+                        </div>
+                    </div>
+                    <div class="card-horizon-glow"></div>
                 </div>
-                <h3>ClickHouse Cloud Telemetry</h3>
-                <p>Aggregates 1-hour rolling GPU burn directly in ClickHouse Cloud. Live totals return in under 2 milliseconds.</p>
-                <span class="feat-tag">clickhouse-cloud</span>
+
+                <!-- CARD 2: DETERMINISTIC GUARDRAILS (STACKED CAPSULES) -->
+                <div class="b-card">
+                    <div class="b-card-head">
+                        <h3>Deterministic Guardrails</h3>
+                        <p>Pure Python arithmetic checks that intercept dispatches and eliminate LLM math hallucinations.</p>
+                    </div>
+                    <div class="b-card-stage">
+                        <div class="b-capsule-stack">
+                            <div class="b-capsule">
+                                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                <span>Job Dispatch Intercept</span>
+                            </div>
+                            <div class="b-capsule">
+                                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                <span>Pure Python Arithmetic</span>
+                            </div>
+                            <div class="b-capsule active-bright">
+                                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                <span>Hard Cap Enforcement ($500)</span>
+                            </div>
+                            <div class="b-capsule">
+                                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                                <span>SHA-256 Block Commit</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-horizon-glow"></div>
+                </div>
+
+                <!-- CARD 3: STUDIO STACK CONNECTORS (ORBIT CONSTELLATION) -->
+                <div class="b-card">
+                    <div class="b-card-head">
+                        <h3>Studio Stack Connectors</h3>
+                        <p>Seamless integration with industry dispatchers, game engines, and cloud clusters.</p>
+                    </div>
+                    <div class="b-card-stage">
+                        <div class="b-orbit-stage">
+                            <div class="orbit-ring"></div>
+                            <div class="orbit-center-node">
+                                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                            </div>
+                            <div class="orbit-node node-pos-1" title="ClickHouse Cloud">CH</div>
+                            <div class="orbit-node node-pos-2" title="Google Gemini">AI</div>
+                            <div class="orbit-node node-pos-3" title="Unreal Engine">UE</div>
+                            <div class="orbit-node node-pos-4" title="Deadline Dispatcher">VFX</div>
+                        </div>
+                    </div>
+                    <div class="card-horizon-glow"></div>
+                </div>
             </div>
-            <div class="feat-item">
-                <div class="feat-icon">
-                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+
+            <!-- BOTTOM ROW: 2 ASYMMETRIC WIDE CARDS -->
+            <div class="bento-row-bottom">
+                <!-- CARD 4: GEMINI INTELLIGENT REMEDIATION (~42%) -->
+                <div class="b-card">
+                    <div class="b-card-head">
+                        <h3>Gemini Cognitive Remedy</h3>
+                        <p>When runaway renders breach caps, Gemini ADK synthesizes compliant alternatives.</p>
+                    </div>
+                    <div class="b-card-stage">
+                        <div class="b-tx-stack">
+                            <div class="b-tx-card">
+                                <div class="b-tx-info">
+                                    <span class="b-tx-title">VFX_09 // 8K Volumetric Batch</span>
+                                    <span class="b-tx-meta breach">$4,176.00 · Over Budget (+$3,676)</span>
+                                </div>
+                                <span class="b-tx-badge blocked">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                                    BLOCKED
+                                </span>
+                            </div>
+                            <div class="b-tx-card">
+                                <div class="b-tx-info">
+                                    <span class="b-tx-title">Gemini Remedy // 4K Proxy Pass</span>
+                                    <span class="b-tx-meta safe">$180.00 · Spot Nodes · Headroom Safe</span>
+                                </div>
+                                <span class="b-tx-badge approved">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    APPROVED
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-right-plume"></div>
                 </div>
-                <h3>Deterministic Policy Engine</h3>
-                <p>Pure Python arithmetic evaluates rolling burn vs hard caps. Zero LLMs touch the budget verdict — zero hallucination risk.</p>
-                <span class="feat-tag">pure-python</span>
-            </div>
-            <div class="feat-item">
-                <div class="feat-icon">
-                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"></path></svg>
+
+                <!-- CARD 5: IMMUTABLE CRYPTOGRAPHIC AUDIT (~58%) -->
+                <div class="b-card">
+                    <div class="b-card-head">
+                        <h3>Immutable SHA-256 Audit Trail</h3>
+                        <p>Every decision is linked in a contiguous cryptographic hash-chain directly in ClickHouse.</p>
+                    </div>
+                    <div class="b-card-stage">
+                        <div class="b-chart-stage">
+                            <!-- Interactive Tooltip Popover -->
+                            <div class="b-chart-popover">
+                                <div class="popover-date">
+                                    <span>BLOCK #128</span>
+                                    <span>2026-09-03</span>
+                                </div>
+                                <span class="popover-job">4K Plate Render ($180.00)</span>
+                                <span class="popover-hash">SHA: 8f2c91...e41b</span>
+                                <span class="popover-status">
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Valid Contiguous Chain
+                                </span>
+                            </div>
+
+                            <!-- SVG Chart -->
+                            <svg class="b-chart-svg" viewBox="0 0 540 180" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="chart-area-grad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#c084fc" stop-opacity="0.3"/>
+                                        <stop offset="100%" stop-color="#7e22ce" stop-opacity="0"/>
+                                    </linearGradient>
+                                </defs>
+                                <!-- Grid lines -->
+                                <line x1="0" y1="40" x2="540" y2="40" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3"/>
+                                <line x1="0" y1="90" x2="540" y2="90" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3,3"/>
+                                <line x1="0" y1="140" x2="540" y2="140" stroke="rgba(255,255,255,0.06)"/>
+
+                                <!-- Budget Cap Line ($500) -->
+                                <line x1="0" y1="35" x2="540" y2="35" stroke="rgba(239, 68, 68, 0.45)" stroke-width="1.5" stroke-dasharray="4,4"/>
+                                <text x="470" y="30" fill="rgba(239,68,68,0.7)" font-family="Space Grotesk" font-size="9.5" font-weight="600">$500 CAP</text>
+
+                                <!-- Shaded Area Under Curve -->
+                                <path d="M0,145 Q80,135 150,115 T300,85 T420,65 T540,55 L540,150 L0,150 Z" fill="url(#chart-area-grad)"/>
+
+                                <!-- Trend Line -->
+                                <path d="M0,145 Q80,135 150,115 T300,85 T420,65 T540,55" fill="none" stroke="#d0a8fe" stroke-width="2.5"/>
+
+                                <!-- Glowing Data Pins -->
+                                <circle cx="150" cy="115" r="4" fill="#ffffff" stroke="#c084fc" stroke-width="2.5"/>
+                                <circle cx="300" cy="85" r="5" fill="#ffffff" stroke="#a855f7" stroke-width="3"/>
+                                <circle cx="420" cy="65" r="4" fill="#ffffff" stroke="#c084fc" stroke-width="2.5"/>
+                                <circle cx="500" cy="58" r="4" fill="#ffffff" stroke="#c084fc" stroke-width="2.5"/>
+
+                                <!-- X-Axis Labels -->
+                                <text x="10" y="168" fill="rgba(255,255,255,0.3)" font-family="Space Grotesk" font-size="10">00:00</text>
+                                <text x="140" y="168" fill="rgba(255,255,255,0.3)" font-family="Space Grotesk" font-size="10">00:15</text>
+                                <text x="275" y="168" fill="rgba(255,255,255,0.3)" font-family="Space Grotesk" font-size="10">00:30</text>
+                                <text x="405" y="168" fill="rgba(255,255,255,0.3)" font-family="Space Grotesk" font-size="10">00:45</text>
+                                <text x="500" y="168" fill="rgba(255,255,255,0.3)" font-family="Space Grotesk" font-size="10">01:00</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-chart-glow"></div>
                 </div>
-                <h3>SHA-256 Cryptographic Ledger</h3>
-                <p>Every decision is hashed into an immutable chain. Any tampered row invalidates the entire governance ledger.</p>
-                <span class="feat-tag">sha-256-chain</span>
             </div>
         </div>
     </section>
@@ -934,6 +1474,249 @@
         window.addEventListener('scroll', () => {
             document.getElementById('nav').classList.toggle('scrolled', scrollY > 40);
         }, { passive: true });
+
+        /* ─── INTERACTIVE NEON BRICK GRID ANIMATION ─── */
+        (function() {
+            const canvas = document.getElementById('hero-brick-canvas');
+            if (!canvas) return;
+            const hero = document.querySelector('.hero');
+            if (!hero) return;
+            const ctx = canvas.getContext('2d');
+
+            const BRICK_W = 180;
+            const BRICK_H = 64;
+            const PERIMETER = 2 * (BRICK_W + BRICK_H); // 488px
+
+            let width = 0;
+            let height = 0;
+            let dpr = window.devicePixelRatio || 1;
+
+            let mouseX = -1000;
+            let mouseY = -1000;
+            let isHovering = false;
+            let animId = null;
+
+            let currentHoverKey = null;
+            // Active bricks map: key = `${row}_${col}` -> { x, y, width, height, alpha, phase }
+            const activeBricks = new Map();
+
+            let textZone = { x: 0, y: 0, width: 0, height: 0 };
+
+            function updateTextZone() {
+                const heroRect = hero.getBoundingClientRect();
+                const elements = hero.querySelectorAll('.eyebrow, h1, .hero-sub, .hero-btns');
+                let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                elements.forEach(el => {
+                    const r = el.getBoundingClientRect();
+                    if (r.width > 0 && r.height > 0) {
+                        minX = Math.min(minX, r.left - heroRect.left);
+                        minY = Math.min(minY, r.top - heroRect.top);
+                        maxX = Math.max(maxX, r.right - heroRect.left);
+                        maxY = Math.max(maxY, r.bottom - heroRect.top);
+                    }
+                });
+                if (minX !== Infinity) {
+                    const padX = 28;
+                    const padY = 16;
+                    textZone = {
+                        x: minX - padX,
+                        y: minY - padY,
+                        width: (maxX - minX) + padX * 2,
+                        height: (maxY - minY) + padY * 2
+                    };
+                }
+            }
+
+            function resize() {
+                const rect = hero.getBoundingClientRect();
+                width = rect.width;
+                height = rect.height;
+                dpr = window.devicePixelRatio || 1;
+                canvas.width = Math.round(width * dpr);
+                canvas.height = Math.round(height * dpr);
+                canvas.style.width = width + 'px';
+                canvas.style.height = height + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                updateTextZone();
+                if (!animId) {
+                    animId = requestAnimationFrame(render);
+                }
+            }
+
+            function getBrickAt(mx, my) {
+                if (my < 0 || my > height || mx < 0 || mx > width) return null;
+                const row = Math.floor(my / BRICK_H);
+                const centerTileLeft = (width / 2) - (BRICK_W / 2);
+                const rowShift = (row % 2 === 0) ? 0 : (BRICK_W / 2);
+                const baseOffset = (centerTileLeft % BRICK_W + BRICK_W) % BRICK_W;
+                const effectiveOffset = (baseOffset + rowShift) % BRICK_W;
+                const col = Math.floor((mx - effectiveOffset) / BRICK_W);
+                const x = effectiveOffset + col * BRICK_W;
+                const y = row * BRICK_H;
+                return { key: `${row}_${col}`, x, y, width: BRICK_W, height: BRICK_H };
+            }
+
+            let lastMouseX = -1000;
+            let lastMouseY = -1000;
+
+            function activateBrickAt(mx, my) {
+                // Do not activate bricks when cursor is over the header text
+                if (textZone.width > 0 &&
+                    mx >= textZone.x && mx <= textZone.x + textZone.width &&
+                    my >= textZone.y && my <= textZone.y + textZone.height) {
+                    return;
+                }
+
+                const brick = getBrickAt(mx, my);
+                if (brick) {
+                    currentHoverKey = brick.key;
+                    if (!activeBricks.has(brick.key)) {
+                        activeBricks.set(brick.key, {
+                            x: brick.x,
+                            y: brick.y,
+                            width: brick.width,
+                            height: brick.height,
+                            alpha: 1.0, // Instant full brightness
+                            phase: Math.random() * PERIMETER
+                        });
+                    } else {
+                        const b = activeBricks.get(brick.key);
+                        b.alpha = 1.0;
+                    }
+                }
+            }
+
+            hero.addEventListener('pointermove', (e) => {
+                const rect = hero.getBoundingClientRect();
+                mouseX = e.clientX - rect.left;
+                mouseY = e.clientY - rect.top;
+                isHovering = true;
+
+                // Interpolate between previous and current mouse positions so fast movements leave an unbroken trail
+                if (lastMouseX >= 0 && lastMouseY >= 0) {
+                    const dist = Math.hypot(mouseX - lastMouseX, mouseY - lastMouseY);
+                    const steps = Math.min(10, Math.max(1, Math.floor(dist / 20)));
+                    for (let s = 1; s <= steps; s++) {
+                        const ix = lastMouseX + (mouseX - lastMouseX) * (s / steps);
+                        const iy = lastMouseY + (mouseY - lastMouseY) * (s / steps);
+                        activateBrickAt(ix, iy);
+                    }
+                } else {
+                    activateBrickAt(mouseX, mouseY);
+                }
+
+                lastMouseX = mouseX;
+                lastMouseY = mouseY;
+
+                if (!animId) {
+                    animId = requestAnimationFrame(render);
+                }
+            });
+
+            hero.addEventListener('pointerleave', () => {
+                isHovering = false;
+                currentHoverKey = null;
+                mouseX = -1000;
+                mouseY = -1000;
+                lastMouseX = -1000;
+                lastMouseY = -1000;
+            });
+
+            function render(now) {
+                ctx.clearRect(0, 0, width, height);
+
+                // 1. Draw subtle ambient mouse spotlight
+                if (isHovering && mouseX >= 0 && mouseY >= 0) {
+                    const spotGrad = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 160);
+                    spotGrad.addColorStop(0, 'rgba(192, 132, 252, 0.2)');
+                    spotGrad.addColorStop(0.45, 'rgba(168, 85, 247, 0.08)');
+                    spotGrad.addColorStop(1, 'rgba(147, 51, 234, 0)');
+                    ctx.fillStyle = spotGrad;
+                    ctx.beginPath();
+                    ctx.arc(mouseX, mouseY, 160, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // 2. Animate flowing neon laser beam around all trail bricks
+                const speed = 320; // px per second
+                const dashLength = 145; // length of flowing neon pulse
+
+                let hasActive = isHovering;
+
+                activeBricks.forEach((b, key) => {
+                    // If cursor is actively hovering this exact brick, keep at 1.0
+                    if (isHovering && key === currentHoverKey) {
+                        b.alpha = 1.0;
+                    } else {
+                        // Smoothly decay alpha over ~80 frames (~1.4s lingering glowing trail)
+                        b.alpha -= 0.012;
+                    }
+
+                    if (b.alpha <= 0.005) {
+                        activeBricks.delete(key);
+                        return;
+                    }
+
+                    hasActive = true;
+                    ctx.save();
+
+                    // A. Subtle energetic inner fill
+                    ctx.fillStyle = 'rgba(168, 85, 247, ' + (0.08 * b.alpha) + ')';
+                    ctx.fillRect(b.x + 1, b.y + 1, b.width - 2, b.height - 2);
+
+                    // B. Perimeter brick mortar outline
+                    ctx.strokeStyle = 'rgba(192, 132, 252, ' + (0.35 * b.alpha) + ')';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([]);
+                    ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.width, b.height);
+
+                    // C. Flowing neon laser beam
+                    const dashOffset = (now * 0.001 * speed + b.phase) % PERIMETER;
+                    ctx.setLineDash([dashLength, PERIMETER - dashLength]);
+                    ctx.lineDashOffset = -dashOffset;
+
+                    // Outer vibrant violet glow halo
+                    ctx.strokeStyle = 'rgba(216, 174, 255, ' + (0.95 * b.alpha) + ')';
+                    ctx.lineWidth = 3;
+                    ctx.shadowColor = '#d0a8fe';
+                    ctx.shadowBlur = 16;
+                    ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.width, b.height);
+
+                    // Inner white-hot laser core
+                    ctx.strokeStyle = 'rgba(255, 255, 255, ' + b.alpha + ')';
+                    ctx.lineWidth = 1.5;
+                    ctx.shadowColor = '#ffffff';
+                    ctx.shadowBlur = 6;
+                    ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.width, b.height);
+
+                    ctx.restore();
+                });
+
+                // 3. Clear text exclusion zone so animations never collide with header text
+                if (textZone.width > 0 && textZone.height > 0) {
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'destination-out';
+                    ctx.fillStyle = '#000000';
+                    ctx.beginPath();
+                    if (ctx.roundRect) {
+                        ctx.roundRect(textZone.x, textZone.y, textZone.width, textZone.height, 22);
+                    } else {
+                        ctx.rect(textZone.x, textZone.y, textZone.width, textZone.height);
+                    }
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                if (hasActive || isHovering) {
+                    animId = requestAnimationFrame(render);
+                } else {
+                    animId = null;
+                }
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+        })();
     </script>
 </body>
 </html>
