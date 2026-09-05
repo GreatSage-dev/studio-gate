@@ -1086,8 +1086,8 @@
         }
         .ledger-header-row {
             display: grid;
-            grid-template-columns: 130px 220px 1fr 110px;
-            gap: 20px;
+            grid-template-columns: 140px minmax(220px, 1.8fr) minmax(140px, 1fr) 90px;
+            gap: 16px;
             padding: 16px 26px;
             background: rgba(255, 255, 255, 0.025);
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -1107,13 +1107,14 @@
 
         .ledger-item {
             display: grid;
-            grid-template-columns: 130px 220px 1fr 110px;
-            gap: 20px;
+            grid-template-columns: 140px minmax(220px, 1.8fr) minmax(140px, 1fr) 90px;
+            gap: 16px;
             padding: 17px 26px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             align-items: center;
             font-size: 13.5px;
             transition: background 0.15s;
+            min-width: 0;
         }
         .ledger-item:last-child { border-bottom: none; }
         .ledger-item:hover { background: rgba(255, 255, 255, 0.025); }
@@ -1128,6 +1129,8 @@
             padding: 5px 10px;
             border-radius: 6px;
             width: fit-content;
+            white-space: nowrap;
+            letter-spacing: 0.04em;
         }
         .tag-badge.approved {
             background: var(--status-approved-bg);
@@ -1139,6 +1142,11 @@
             color: var(--status-blocked);
             border: 1px solid var(--status-blocked-border);
         }
+        .tag-badge.remediated {
+            background: rgba(192, 132, 252, 0.14);
+            color: #c084fc;
+            border: 1px solid rgba(192, 132, 252, 0.35);
+        }
         .job-title-cell {
             font-family: 'Outfit', sans-serif;
             font-weight: 500;
@@ -1146,6 +1154,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            min-width: 0;
         }
         .hash-code-cell {
             font-family: 'JetBrains Mono', monospace;
@@ -2010,17 +2019,27 @@
                 d.entries.slice(0, 20).forEach(entry => {
                     const row = document.createElement('div');
                     row.className = 'ledger-item';
-                    const isApproved = entry.verdict === 'APPROVED';
-                    const iconSvg = isApproved
-                        ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>'
-                        : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+
+                    let badgeClass = 'blocked';
+                    let badgeLabel = entry.verdict || 'BLOCKED';
+                    let iconSvg = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
+
+                    if (entry.verdict === 'APPROVED') {
+                        badgeClass = 'approved';
+                        badgeLabel = 'APPROVED';
+                        iconSvg = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                    } else if (entry.verdict && (entry.verdict.includes('REMEDIAT') || entry.verdict.includes('OVERRIDE'))) {
+                        badgeClass = 'remediated';
+                        badgeLabel = 'REMEDIATED';
+                        iconSvg = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                    }
 
                     const hashDisplay = entry.entry_hash ? (entry.entry_hash.slice(0, 10) + '...' + entry.entry_hash.slice(-8)) : '—';
 
                     row.innerHTML = `
-                        <div class="tag-badge ${isApproved ? 'approved' : 'blocked'}">
+                        <div class="tag-badge ${badgeClass}">
                             ${iconSvg}
-                            ${entry.verdict}
+                            <span>${badgeLabel}</span>
                         </div>
                         <div class="job-title-cell" title="${entry.target_job}">${entry.target_job}</div>
                         <div class="hash-code-cell" title="Click to copy SHA-256 hash: ${entry.entry_hash}" onclick="copyHash('${entry.entry_hash}')">${hashDisplay}</div>
