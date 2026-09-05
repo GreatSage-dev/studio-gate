@@ -28,7 +28,11 @@ from studiogate.remediation import format_remediation_prompt, RemediationProposa
 
 load_dotenv()
 
-HARD_BUDGET_CAP = float(os.getenv("HARD_BUDGET_CAP_USD", "500.0"))
+raw_cap = (os.getenv("HARD_BUDGET_CAP_USD") or "").strip()
+try:
+    HARD_BUDGET_CAP = float(raw_cap) if raw_cap else 500.0
+except (ValueError, TypeError):
+    HARD_BUDGET_CAP = 500.0
 
 
 # ---------------------------------------------------------------------------

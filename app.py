@@ -37,7 +37,16 @@ possible_dirs = [BASE_DIR, os.getcwd(), os.path.dirname(BASE_DIR)]
 TEMPLATES_DIR = next((os.path.join(d, "templates") for d in possible_dirs if os.path.exists(os.path.join(d, "templates"))), os.path.join(BASE_DIR, "templates"))
 STATIC_DIR = next((os.path.join(d, "static") for d in possible_dirs if os.path.exists(os.path.join(d, "static"))), os.path.join(BASE_DIR, "static"))
 
-HARD_BUDGET_CAP = float(os.getenv("HARD_BUDGET_CAP_USD", "500.0"))
+def _safe_float_env(var_name: str, default: float) -> float:
+    raw = (os.getenv(var_name) or "").strip()
+    if not raw:
+        return default
+    try:
+        return float(raw)
+    except (ValueError, TypeError):
+        return default
+
+HARD_BUDGET_CAP = _safe_float_env("HARD_BUDGET_CAP_USD", 500.0)
 
 app = FastAPI(title="StudioGate", description="Mission Control Governance Console")
 if os.path.exists(STATIC_DIR):

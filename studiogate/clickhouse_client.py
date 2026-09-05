@@ -31,9 +31,12 @@ def get_client() -> clickhouse_connect.driver.Client:
     if not host or not password:
         raise ValueError("CLICKHOUSE_HOST and CLICKHOUSE_PASSWORD must be set in .env")
 
+    raw_port = (os.getenv("CLICKHOUSE_PORT") or "").strip()
+    port = int(raw_port) if raw_port.isdigit() else 8443
+
     return clickhouse_connect.get_client(
         host=host,
-        port=int(os.getenv("CLICKHOUSE_PORT", "8443")),
+        port=port,
         username=os.getenv("CLICKHOUSE_USER", "default"),
         password=password,
         secure=True,
