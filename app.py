@@ -5,21 +5,30 @@ Built with Elite CSS/HTML Architecture & direct ClickHouse + Gemini integration.
 """
 import json
 import os
+import sys
 import traceback
+
+_current_dir = os.path.dirname(os.path.abspath(__file__))
+for _p in [_current_dir, os.getcwd(), os.path.join(_current_dir, "studiogate")]:
+    if _p and _p not in sys.path:
+        sys.path.insert(0, _p)
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 import uvicorn
 
-from studiogate import clickhouse_client, policy_engine
-from studiogate.hash_chain import verify_chain
-from studiogate.remediation import format_remediation_prompt, generate_live_remediation
-from studiogate.telemetry_daemon import daemon
-from studiogate.render_engine import render_blocked_workload, render_compliant_proxy
-from studiogate.worker_pool import pool
-
-from fastapi.staticfiles import StaticFiles
+try:
+    from studiogate import clickhouse_client, policy_engine
+    from studiogate.hash_chain import verify_chain
+    from studiogate.remediation import format_remediation_prompt, generate_live_remediation
+    from studiogate.telemetry_daemon import daemon
+    from studiogate.render_engine import render_blocked_workload, render_compliant_proxy
+    from studiogate.worker_pool import pool
+    IMPORT_ERROR = None
+except Exception:
+    IMPORT_ERROR = traceback.format_exc()
 
 load_dotenv()
 
@@ -33,6 +42,20 @@ HARD_BUDGET_CAP = float(os.getenv("HARD_BUDGET_CAP_USD", "500.0"))
 app = FastAPI(title="StudioGate", description="Mission Control Governance Console")
 if os.path.exists(STATIC_DIR):
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+if IMPORT_ERROR:
+    @app.get("/{full_path:path}", response_class=HTMLResponse)
+    async def import_error_view(full_path: str):
+        return HTMLResponse(
+            f"<html><body style='background:#0b0816;color:#f43f5e;font-family:monospace;padding:2rem;'>"
+            f"<h2>StudioGate Diagnostic Loader</h2>"
+            f"<p>An error occurred while importing backend modules:</p>"
+            f"<pre style='background:#171126;padding:1.5rem;border:1px solid #f43f5e;border-radius:8px;color:#fff;'>{IMPORT_ERROR}</pre>"
+            f"<p style='color:#a78bfa;'><b>sys.path:</b> {sys.path}</p>"
+            f"<p style='color:#a78bfa;'><b>CWD:</b> {os.getcwd()}</p>"
+            f"</body></html>",
+            status_code=500
+        )
 
 
 @app.on_event("startup")
