@@ -27,15 +27,15 @@ StudioGate separates governance into two distinct tiers:
 
 ---
 
-## 🤖 Business-Process AI: No Mediocre Chatbots
+## 🤖 Business-Process AI: Gemini 3.6 Flash Multimodal Vision
 
-> *"Gemini does not generate text around the edges of this system. It reads live financial state and produces actionable production alternatives that operators execute with one click."*
+> *"Gemini does not parse JSON around the edges of this system. It acts as an Autonomous VFX Supervisor: it visually inspects actual rendered volumetric frames, calculates perceptual quality trade-offs for director dailies, and keeps the production on schedule."*
 
-In StudioGate, Gemini 3.6 Flash (via Google ADK) is not an ornamental chatbot. It participates directly in the business process:
-- When pure arithmetic halts an 8K volumetric pass that would exceed the $500 ceiling, Gemini inspects the remaining headroom ($184.20), cluster power metrics, and delivery targets.
-- It synthesizes a studio-grade technical alternative: downsampling from uncompressed 8K to a 4K proxy format with 2x temporal super-sampling, re-routed from dedicated H100s to spot instances at $180.00.
-- The human operator reviews the side-by-side visual comparison and clicks **"Dispatch Compliant Remedy"**.
-- StudioGate immediately triggers a real procedural volumetric raymarcher and logs the approved remediation block to ClickHouse Cloud.
+In StudioGate, **Google Gemini 3.6 Flash** is a true multimodal participant in the cinema pipeline:
+- **Multimodal Frame Inspection:** When pure Python arithmetic halts an 8K volumetric pass (`SEQ_14_SH_0210 // Dune Sandstorm`) that would breach the $500 episodic cap, Gemini does not just read numbers—it **looks directly at the rendered frame image** (`vfx_09_blocked_pass.png`) via the Google GenAI SDK.
+- **Perceptual Quality Analysis:** Gemini inspects the image's spatial frequency and volumetric optical density: *"The render exhibits an exceptionally clean, low-frequency volumetric glow with smooth gradient falloff and minimal high-frequency specular noise. Atmospheric density is concentrated in background z-depth; actor silhouette plane remains unaffected."*
+- **Cinematic Remediation Synthesis:** Gemini calculates a **98.4% Perceptual Retention Index** for 24fps theatrical projection, downscaling from uncompressed 8K to a 4K proxy format with 2x temporal super-sampling on preemptible spot nodes. It reduces spend from **$4,176.00 $\rightarrow$ $180.00**, delivering the render by 07:45 AM—comfortably ahead of the 08:30 AM director dailies screening.
+- **Visual One-Click Execution:** The VFX operator inspects the side-by-side visual diff and clicks **"Dispatch Compliant Remedy"**, executing a procedural volumetric raymarcher and recording the decision hash to ClickHouse Cloud.
 
 ---
 

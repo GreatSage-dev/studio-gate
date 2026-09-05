@@ -925,6 +925,68 @@
         .cc-cost { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 700; color: #fff; }
         .cc-body { font-size: 13.5px; line-height: 1.65; color: rgba(255, 255, 255, 0.7); }
 
+        .vfx-callsheet-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--status-warning);
+            background: var(--status-warning-bg);
+            border: 1px solid var(--status-warning-border);
+            padding: 4px 10px;
+            border-radius: 6px;
+            width: fit-content;
+        }
+
+        .vision-analysis-box {
+            background: rgba(192, 132, 252, 0.07);
+            border: 1px solid rgba(192, 132, 252, 0.25);
+            border-radius: 12px;
+            padding: 12px 14px;
+            position: relative;
+        }
+        .va-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #c084fc;
+            background: rgba(192, 132, 252, 0.16);
+            padding: 2px 8px;
+            border-radius: 5px;
+            margin-bottom: 6px;
+        }
+        .vfx-spec-strip {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        .vfx-spec-cell {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+        .vfx-k {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+        .vfx-v {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
         .remedy-cta-btn {
             width: 100%;
             padding: 14px 20px;
@@ -1535,27 +1597,27 @@
 
                         <div class="dispatch-stack">
                             <!-- Job 1: Blocked Breach Example -->
-                            <button class="dispatch-btn blocked-preview" onclick="submitJob('8K Final Pass', 7200, 0.58)">
+                            <button class="dispatch-btn blocked-preview" onclick="submitJob('SEQ_14_SH_0210 // 8K Volumetric Dune Dust Pass', 7200, 0.58)">
                                 <div class="d-info">
-                                    <span class="d-name">VFX_09 // 8K Volumetric Final Pass</span>
-                                    <span class="d-sub">7,200s render · 8x H100 GPU Cluster</span>
+                                    <span class="d-name">SEQ_14_SH_0210 // 8K Volumetric Dune Dust</span>
+                                    <span class="d-sub">Target Dailies 08:30 AM · 7,200s · 8x H100 GPU Cluster</span>
                                 </div>
                                 <span class="d-cost-pill">$4,176.00</span>
                             </button>
 
                             <!-- Job 2: Approved Job Example -->
-                            <button class="dispatch-btn approved-preview" onclick="submitJob('4K Plate Pass', 1200, 0.15)">
+                            <button class="dispatch-btn approved-preview" onclick="submitJob('SEQ_08_SH_0040 // 4K Plates Lighting Pass', 1200, 0.15)">
                                 <div class="d-info">
-                                    <span class="d-name">LGT_02 // 4K Plates Lighting Pass</span>
+                                    <span class="d-name">SEQ_08_SH_0040 // 4K Plates Lighting Pass</span>
                                     <span class="d-sub">1,200s render · 2x A100 SXM Nodes</span>
                                 </div>
                                 <span class="d-cost-pill">$180.00</span>
                             </button>
 
                             <!-- Job 3: Quick Sim Example -->
-                            <button class="dispatch-btn approved-preview" onclick="submitJob('Smoke Sim', 450, 0.08)">
+                            <button class="dispatch-btn approved-preview" onclick="submitJob('SEQ_12_SH_0115 // Pyro & Smoke Volumetrics', 450, 0.08)">
                                 <div class="d-info">
-                                    <span class="d-name">FX_04 // Pyro & Smoke Volumetrics</span>
+                                    <span class="d-name">SEQ_12_SH_0115 // Pyro & Smoke Volumetrics</span>
                                     <span class="d-sub">450s render · Spot GPU Queue</span>
                                 </div>
                                 <span class="d-cost-pill">$36.00</span>
@@ -1627,11 +1689,17 @@
                     <div class="remedy-comparison-grid">
                         <!-- Card 1: Violating Request -->
                         <div class="comparison-card violating">
-                            <div class="cc-badge blocked">● Blocked Runaway Request</div>
-                            <div class="cc-title">VFX_09 // 8K Full Precision Render</div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                                <div class="cc-badge blocked">● Blocked Runaway Request</div>
+                                <div class="vfx-callsheet-tag">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    Target Dailies: 08:30 AM Screening
+                                </div>
+                            </div>
+                            <div class="cc-title" id="shot-code-title">SEQ_14_SH_0210 // 8K Volumetric Dune Dust Pass</div>
                             <div class="cc-cost" style="color:var(--status-blocked);">$4,176.00</div>
                             <div class="cc-body">
-                                <strong>Reason for Intercept:</strong> Exceeds the $500.00 hard budget cap by <strong>+$3,676.00</strong>. Blocked by pure Python arithmetic. Zero cloud resources consumed.
+                                <strong>Reason for Intercept:</strong> Exceeds the $500.00 episodic cap by <strong>+$3,676.00</strong>. Blocked by pure Python arithmetic. Zero cloud GPU compute wasted.
                             </div>
 
                             <!-- Real Render Frame Visual: Blocked Pass -->
@@ -1654,11 +1722,38 @@
 
                         <!-- Card 2: Gemini Synthesized Remedy -->
                         <div class="comparison-card synthesized">
-                            <div class="cc-badge approved">✔ Gemini Synthesized Proposal</div>
-                            <div class="cc-title">4K Proxy Pass on Spot Instances</div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                                <div class="cc-badge approved">✔ Gemini 3.6 Flash · Multimodal Vision</div>
+                                <span style="font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:700; color:#c084fc;">VFX Supervisor Mode</span>
+                            </div>
+                            <div class="cc-title" id="remedy-proposal-title">4K Dailies Proxy with 2x Temporal Supersampling</div>
                             <div class="cc-cost" style="color:var(--status-approved);">$180.00</div>
-                            <p id="remediation-text" class="cc-body">
-                                Gemini Remedy: Downsample from 8K uncompressed to 4K proxy format with 2x temporal supersampling. Shift from dedicated H100 cluster to preemptible spot nodes. Slashes compute spend from $4,176.00 down to $180.00, safely fitting within the remaining headroom.
+
+                            <!-- Gemini Multimodal Vision Inspection Callout -->
+                            <div class="vision-analysis-box">
+                                <div class="va-badge">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    Multimodal Frame Inspection
+                                </div>
+                                <p id="vision-analysis-text" style="margin:0; font-size:12px; color:#e2e8f0; line-height:1.55;">
+                                    The render displays low spatial frequency with a smooth, soft volumetric illumination glow and minimal high-frequency detail. Over-resolved 8K sampling on this broad atmospheric gradient provides negligible visual gain.
+                                </p>
+                            </div>
+
+                            <!-- Cinematic Metrics Grid -->
+                            <div class="vfx-spec-strip">
+                                <div class="vfx-spec-cell">
+                                    <div class="vfx-k">Perceptual Fidelity Index</div>
+                                    <div class="vfx-v" id="perceptual-index-val" style="color:var(--status-approved);">98.4% (Theatrical / Dailies)</div>
+                                </div>
+                                <div class="vfx-spec-cell">
+                                    <div class="vfx-k">Dailies Call-Sheet</div>
+                                    <div class="vfx-v" id="dailies-status-val" style="color:var(--accent);">READY // 07:45 AM (45m early)</div>
+                                </div>
+                            </div>
+
+                            <p id="remediation-text" class="cc-body" style="font-size:12.5px;">
+                                VFX Supervisor Override: Downsample from 8K uncompressed to 4K proxy format with 2x temporal supersampling. Shift from dedicated H100 cluster to preemptible spot nodes. Slashes compute spend from $4,176.00 down to $180.00, safely preserving the 08:30 AM dailies screening.
                             </p>
 
                             <!-- Real Render Frame Visual: Synthesized Proxy -->
@@ -1948,6 +2043,19 @@
                 const d = await r.json();
                 
                 if (d.verdict === 'BLOCKED' || d.remedy_suggestion) {
+                    if (d.remediation_context) {
+                        const rc = d.remediation_context;
+                        const vaText = document.getElementById('vision-analysis-text');
+                        if (vaText && rc.visual_analysis) vaText.innerText = rc.visual_analysis;
+                        const piVal = document.getElementById('perceptual-index-val');
+                        if (piVal && rc.perceptual_index) piVal.innerText = rc.perceptual_index + ' (Theatrical / Dailies)';
+                        const dsVal = document.getElementById('dailies-status-val');
+                        if (dsVal && rc.dailies_readiness) dsVal.innerText = rc.dailies_readiness;
+                        const shotTitle = document.getElementById('shot-code-title');
+                        if (shotTitle && rc.shot_code) shotTitle.innerText = rc.shot_code;
+                        const remTitle = document.getElementById('remedy-proposal-title');
+                        if (remTitle && rc.proposed_alternative) remTitle.innerText = rc.proposed_alternative;
+                    }
                     if (d.remedy_suggestion) {
                         const remText = document.getElementById('remediation-text');
                         if (remText) remText.innerText = d.remedy_suggestion;

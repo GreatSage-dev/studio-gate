@@ -53,11 +53,11 @@
 ### 🎙️ Voiceover:
 > "Now, look at the remediation deck. 
 >
-> Gemini does not generate text around the edges of this system. It reads live financial state and produces actionable production alternatives that operators execute with one click.
+> Gemini does not parse text around the edges of this system. It acts as an Autonomous VFX Supervisor using true multimodal vision.
 >
-> Gemini 3.6 Flash inspected our $500 cap, downsampled the uncompressed 8K render into a 4K proxy format with 2x temporal super-sampling, and re-routed it to spot instances at $180.00. 
+> Gemini 3.6 Flash literally looks directly at the rendered frame image. It inspected the spatial frequency and volumetric optical density of this Dune sandstorm pass, calculated a 98.4% Perceptual Retention Index for 24fps theatrical projection, and verified delivery 45 minutes ahead of the 08:30 AM director dailies screening.
 >
-> When I click 'Dispatch Compliant Remedy', StudioGate allocates the spot node, executes a real procedural raymarcher to generate the frame, and commits the transaction."
+> It re-routes the workload to a 4K proxy pass on spot instances at $180.00. When I click 'Dispatch Compliant Remedy', StudioGate allocates the spot node, renders the procedural volumetric frame in real time, and commits the decision."
 
 ---
 

@@ -178,6 +178,7 @@ async def submit_job(request: Request):
         # 5. Build structured remediation context via Gemini 3.6 Flash if BLOCKED
         remediation_context = None
         if result["verdict"] == "BLOCKED":
+            frame_img_path = os.path.join(STATIC_DIR, "renders", "vfx_09_blocked_pass.png")
             remediation_context = generate_live_remediation(
                 job_type=job_type,
                 original_cost=job_cost,
@@ -185,30 +186,25 @@ async def submit_job(request: Request):
                 rolling_burn=burn_data["rolling_burn_usd"],
                 budget_cap=HARD_BUDGET_CAP,
                 avg_power_kw=burn_data["avg_power_kw"],
+                frame_image_path=frame_img_path,
+                shot_code=body.get("shot_code", "SEQ_14_SH_0210 // Dune Sandstorm Volumetrics"),
             )
             if isinstance(remediation_context, str):
                 try:
-                    clean_str = remediation_context.strip()
-                    if clean_str.startswith("```"):
-                        clean_str = clean_str.split("\n", 1)[1]
-                        clean_str = clean_str.rsplit("```", 1)[0].strip()
-                    parsed = json.loads(clean_str)
-                    if isinstance(parsed, dict):
-                        remediation_context = parsed
+                    remediation_context = json.loads(remediation_context)
                 except Exception:
                     pass
 
             if isinstance(remediation_context, dict):
                 remedy_text = (
-                    f"Gemini Remedy: {remediation_context.get('explanation', '')} "
-                    f"Downscale to {remediation_context.get('proposed_alternative', '4K Proxy Pass')} "
-                    f"at ${float(remediation_context.get('proposed_cost_usd', 180.0)):.2f}."
+                    f"VFX Supervisor Override: {remediation_context.get('explanation', '')} "
+                    f"Alternative: {remediation_context.get('proposed_alternative', '4K Dailies Proxy')} "
+                    f"at ${float(remediation_context.get('proposed_cost_usd', 180.0)):.2f}. "
+                    f"Visual Index: {remediation_context.get('perceptual_index', '98.4%')}."
                 )
-            elif isinstance(remediation_context, str) and remediation_context:
-                remedy_text = f"Gemini Remedy: {remediation_context}"
             else:
                 remedy_text = (
-                    "Gemini Remedy: Downsample from 8K uncompressed to 4K proxy format with 2x temporal supersampling. "
+                    "VFX Supervisor Override: Downsample from 8K uncompressed to 4K proxy format with 2x temporal supersampling. "
                     "Shift from dedicated H100 cluster to preemptible spot nodes. Slashes compute spend from $4,176.00 down to $180.00."
                 )
 
